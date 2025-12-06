@@ -728,7 +728,7 @@
         document.addEventListener('DOMContentLoaded', () => {
             if (localStorage.getItem('isLoggedIn') !== 'true') {
                  // Redirect if not logged in
-                 window.location.href = 'login.html?v=' + Date.now(); 
+                 window.location.href = 'index.html?v=' + Date.now(); 
                  return;
             }
             // Cleanup obsolete mock counter
