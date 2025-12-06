@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title id="page-title">ตั้งค่า | Koi Monitor</title>
+    <style>
+        /* Base and Theme CSS */
+        :root { --background-color: #ffffff; --text-color: #000000; --card-bg: #f8f8f8; --btn-primary: #007bff; --btn-danger: #dc3545; --btn-save: #28a745; }
+        body.dark-theme { --background-color: #121212; --text-color: #e0e0e0; --card-bg: #1e1e1e; --btn-primary: #4da6ff; --btn-danger: #ef4444; --btn-save: #28a745; }
+        
+        /* Global Styles */
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: var(--background-color); color: var(--text-color); margin: 0; padding: 0; display: flex; flex-direction: column; align-items: center; min-height: 100vh; transition: background-color 0.3s, color 0.3s; }
+        .app-container { width: 100%; max-width: 400px; min-height: 100vh; background-color: var(--background-color); position: relative; }
+        .top-fixed-controls { position: absolute; top: 15px; width: 90%; display: flex; justify-content: space-between; z-index: 10; }
+        .lang-toggle-button { padding: 8px 12px; background-color: #f0f0f0; color: #343a40; border: 1px solid #ccc; border-radius: 5px; cursor: pointer; font-weight: bold; transition: background-color 0.3s; }
+        body.dark-theme .lang-toggle-button { background-color: #333; color: #f0f0f0; border-color: #555; }
+
+        /* Theme Toggle Switch styles */
+        .toggle-switch { position: relative; display: inline-block; width: 50px; height: 25px; }
+        .toggle-switch input { opacity: 0; width: 0; height: 0; }
+        .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #ffc107; transition: .4s; border-radius: 25px; }
+        .slider:before { position: absolute; content: ""; height: 17px; width: 17px; left: 4px; bottom: 4px; background-color: white; transition: .4s; border-radius: 50%; }
+        input:checked + .slider { background-color: #2c3e50; }
+        input:checked + .slider:before { transform: translateX(25px); }
+        
+        /* User Info Card */
+        .user-card { 
+            background-color: var(--card-bg); 
+            padding: 20px; 
+            border-radius: 12px; 
+            margin: 15px 0 0; 
+            display: flex; 
+            align-items: center; 
+            gap: 15px; 
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            cursor: pointer; 
+        }
+        .avatar { 
+            width: 60px; 
+            height: 60px; 
+            border-radius: 50%; 
+            object-fit: cover; 
+            background-color: #ccc; 
+            border: 3px solid var(--btn-primary); 
+            cursor: pointer; 
+        }
+        
+        /* Main content wrapper padding reduced */
+        .main-settings-wrapper {
+             padding: 90px 15px 70px 15px; /* 90px clearance from the top */
+        }
+
+        /* Form Inputs */
+        .setting-section { 
+            background-color: var(--card-bg); 
+            padding: 20px; 
+            margin: 15px 0 0 0; 
+            border-radius: 12px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .input-label { display: block; font-size: 0.9em; margin-top: 15px; margin-bottom: 5px; color: var(--text-color); opacity: 0.8; }
+        .input-field { width: 100%; padding: 10px; border-radius: 8px; border: 1px solid #ccc; background-color: var(--background-color); color: var(--text-color); }
+        .non-editable { background-color: #aaa3; border-style: dashed; }
+
+        /* Logout Button */
+        #btnLogout { width: 100%; padding: 15px; margin-top: 30px; background-color: var(--btn-danger); color: white; border-radius: 12px; font-size: 1.1em; font-weight: bold; border: none; }
+        
+        /* Bottom Nav */
+        .bottom-nav { position: fixed; bottom: 0; width: 100%; max-width: 400px; background-color: var(--card-bg); border-top: 1px solid #ccc; display: flex; justify-content: space-around; padding: 5px 0; }
+        .nav-item { flex-grow: 1; text-align: center; color: #6c757d; font-size: 0.8em; padding: 10px 0; text-decoration: none; }
+        .nav-item.active { color: var(--btn-primary); }
+        .nav-item svg { width: 24px; height: 24px; display: block; margin: 0 auto 3px; stroke: currentColor; fill: none; stroke-width: 2; }
+
+        /* Modal Styles */
+        .modal { display: none; position: fixed; z-index: 100; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; background-color: rgba(0,0,0,0.6); }
+        .modal-content { background-color: var(--card-bg); color: var(--text-color); margin: 25% auto; padding: 25px; border-radius: 10px; width: 80%; max-width: 300px; text-align: center; }
+        .modal-button { padding: 10px 20px; border-radius: 8px; font-weight: bold; margin: 5px; border: none; }
+
+        /* New styles for Edit Container */
+        #editControls { 
+            display: flex; 
+            justify-content: center; 
+            gap: 10px; 
+            margin-top: 15px;
+        }
+        #editControls button { font-size: 0.9em; padding: 8px 12px; }
+
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        
+        <div class="top-fixed-controls">
+            <div class="theme-toggle">
+                <label class="toggle-switch">
+                    <input type="checkbox" id="theme-toggle-checkbox">
+                    <span class="slider"></span>
+                </label>
+            </div>
+            <button id="lang-toggle-button" class="lang-toggle-button" onclick="toggleLanguage()">
+                EN
+            </button>
+        </div>
+
+        <div id="mainSettingsContent" class="main-settings-wrapper">
+            <div class="user-card" id="profileSummaryCard" onclick="toggleEditMode(true)">
+                <img id="profileAvatar" src="" class="avatar" alt="Profile">
+                <div>
+                    <div id="usernameDisplay" style="font-weight: bold; font-size: 1.1em;">A</div>
+                    <div id="statusDisplay" style="font-size: 0.8em; color:#999;">สถานะ: ล็อกอิน</div>
+                </div>
+            </div>
+            
+            <input type="file" id="avatarFileInput" accept="image/*" style="display:none;">
+
+            <div id="accountEditContainer" style="display:none;">
+                
+                <h3 id="settingsTitle" style="font-weight: bold; margin-bottom: 5px; margin-top: 20px;">การตั้งค่าบัญชี</h3>
+
+                <div class="setting-section" style="padding:15px; text-align: center;">
+                    <h4 id="photoControlTitle" style="font-weight: bold; font-size: 1em; opacity: 0.9; margin-bottom: 10px;">จัดการรูปโปรไฟล์</h4>
+                    
+                    <img id="editAvatarPreview" src="" class="avatar" style="width: 80px; height: 80px; margin: 0 auto 15px; display: block; border: 4px solid var(--btn-primary);" alt="Edit Preview">
+                    
+                    <div id="editControls" style="display: flex; justify-content: center; gap: 10px;">
+                        <button class="modal-button" style="background-color: var(--btn-primary); color: white;" onclick="changeProfilePhoto()" id="btnChangePhoto">
+                            เปลี่ยนรูป
+                        </button>
+                        <button class="modal-button" style="background-color: #dc3545; color: white;" onclick="removeProfilePhoto()" id="btnRemovePhoto">
+                            ลบรูป
+                        </button>
+                    </div>
+                </div>
+                
+                <form id="accountForm" class="setting-section" onsubmit="saveAccountChanges(event)">
+                    
+                    <label class="input-label" id="labelDisplayName">ชื่อที่แสดง (Display Name)</label>
+                    <input id="displayNameInput" class="input-field" type="text" required>
+
+                    <label class="input-label" id="labelUsername">ชื่อผู้ใช้ (Username)</label>
+                    <input id="usernameInput" class="input-field non-editable" type="text" disabled>
+                    
+                    <label class="input-label" id="labelGmail">Gmail</label>
+                    <input id="gmailInput" class="input-field" type="email" required>
+                    
+                    <h4 id="passwordTitle" style="font-weight: bold; margin-top: 30px; margin-bottom: 5px; font-size: 1em; opacity: 0.9;">เปลี่ยนรหัสผ่าน (ถ้าต้องการ)</h4>
+
+                    <label class="input-label" id="labelNewPass">รหัสผ่านใหม่</label>
+                    <input id="newPassInput" class="input-field" type="password">
+
+                    <label class="input-label" id="labelConfirmPass">ยืนยันรหัสผ่านใหม่</label>
+                    <input id="confirmPassInput" class="input-field" type="password">
+                    
+                    <button type="submit" class="modal-button" style="background-color: #28a745; color: white; margin-top: 25px; width: 100%;" id="btnSaveChanges">บันทึกการเปลี่ยนแปลง</button>
+                </form>
+                
+                <button class="modal-button" style="background-color: #6c757d; color: white; margin-top: 15px; width: 100%;" onclick="toggleEditMode(false)" id="btnDoneEditing">
+                    เสร็จสิ้น 
+                </button>
+            </div>
+            
+
+            <button id="btnLogout" onclick="openLogoutModal()">
+                ออกจากระบบ
+            </button>
+        </div>
+        
+        <nav class="bottom-nav">
+            <a href="main.html" class="nav-item" id="nav-home">
+                <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+                <span class="label">หน้าหลัก</span>
+            </a>
+            <a href="settings.html" class="nav-item active" id="nav-settings">
+                <svg viewBox="0 0 24 24"><path d="M12.22 2h-.44C11.19 2 11 2.19 11 2.44V4h2V2.44C13 2.19 12.81 2 12.56 2zM4.44 5L5 5.56L4.44 6L4 5.56L4.44 5zM20 5l.56.56L20.56 6L21 5.56L20 5zM4 12c0-4.42 3.58-8 8-8s8 3.58 8 8z"/></svg>
+                <span class="label">ตั้งค่า</span>
+            </a>
+        </nav>
+    </div>
+    
+    <div id="logoutModal" class="modal">
+        <div class="modal-content">
+            <h4 id="modalTitle" style="margin-bottom: 15px;">ยืนยันการออกจากระบบ</h4>
+            <p id="modalDesc" style="margin-bottom: 25px; font-size: 0.9em;">คุณแน่ใจหรือไม่ว่าต้องการออกจากระบบ?</p>
+            <button class="modal-button" style="background-color: #ccc; color: #333;" onclick="closeLogoutModal()" id="btnCancel">ยกเลิก</button>
+            <button class="modal-button" style="background-color: var(--btn-danger); color: white;" onclick="confirmLogout()" id="btnConfirm">ออกจากระบบ</button>
+        </div>
+    </div>
+
+    <script>
+        // --- MOCK STORAGE KEYS ---
+        const USER_DATA_KEY = 'koi_user_data';
+        const DEFAULT_AVATAR = "anonymous.png"; 
+        let mockUserData = { displayName: 'User A (Mock)', gmail: 'a@koi.com', avatar: DEFAULT_AVATAR };
+
+
+        // --- CONTENT MAPS ---
+        const langContent = { 
+            'th': { 
+                pageTitle: 'ตั้งค่า | Koi Monitor', navHome: 'หน้าหลัก', navSettings: 'ตั้งค่า', username: 'A', status: 'สถานะ: ล็อกอิน', btnLogout: 'ออกจากระบบ', settingsTitle: 'การตั้งค่าบัญชี', passwordTitle: 'เปลี่ยนรหัสผ่าน', photoControlTitle: 'จัดการรูปโปรไฟล์',
+                modalTitle: 'ยืนยันการออกจากระบบ', modalDesc: 'คุณแน่ใจหรือไม่ว่าต้องการออกจากระบบ?', btnCancel: 'ยกเลิก', btnConfirm: 'ออกจากระบบ',
+                labelDisplayName: 'ชื่อที่แสดง (Display Name)', labelUsername: 'ชื่อผู้ใช้ (Username)', labelGmail: 'Gmail', labelNewPass: 'รหัสผ่านใหม่', labelConfirmPass: 'ยืนยันรหัสผ่านใหม่',
+                btnSaveChanges: 'บันทึกการเปลี่ยนแปลง', btnChangePhoto: 'เปลี่ยนรูป', btnRemovePhoto: 'ลบรูป',
+                // FIX: เพิ่มข้อความสำหรับปุ่มเสร็จสิ้น
+                btnDoneEditing: 'เสร็จสิ้น',
+                alertSaved: 'บันทึกข้อมูลบัญชีสำเร็จ!', alertPassMatch: 'รหัสผ่านไม่ตรงกัน', alertPassChanged: 'เปลี่ยนรหัสผ่านสำเร็จ!', alertMissingInput: 'กรุณากรอกข้อมูลให้ครบถ้วน'
+            },
+            'en': {
+                pageTitle: 'Settings | Koi Monitor', navHome: 'Home', navSettings: 'Settings', username: 'A', status: 'Status: Logged In', btnLogout: 'Log Out', settingsTitle: 'Account Settings', passwordTitle: 'Change Password', photoControlTitle: 'Manage Profile Photo',
+                modalTitle: 'Confirm Logout', modalDesc: 'Are you sure you want to sign out?', btnCancel: 'Cancel', btnConfirm: 'Log Out',
+                labelDisplayName: 'Display Name', labelUsername: 'Username', labelGmail: 'Gmail', labelNewPass: 'New Password', labelConfirmPass: 'Confirm New Password',
+                btnSaveChanges: 'Save Changes', btnChangePhoto: 'Change Photo', btnRemovePhoto: 'Remove Photo',
+                // FIX: เพิ่มข้อความสำหรับปุ่มเสร็จสิ้น
+                btnDoneEditing: 'Done',
+                alertSaved: 'Account data saved!', alertPassMatch: 'Passwords do not match.', alertPassChanged: 'Password changed successfully!', alertMissingInput: 'Please fill in all fields.'
+            }
+        };
+
+        // --- Utility Functions ---
+        function getLang() { return localStorage.getItem('lang') || 'th'; }
+
+        function loadMockData() {
+            try {
+                const raw = localStorage.getItem(USER_DATA_KEY);
+                if (raw) {
+                    const data = JSON.parse(raw);
+                    mockUserData.displayName = data.displayName || mockUserData.displayName;
+                    mockUserData.gmail = data.gmail || mockUserData.gmail;
+                    mockUserData.avatar = data.avatar || DEFAULT_AVATAR; 
+                }
+            } catch (e) {
+                console.error("Error loading user data:", e);
+            }
+        }
+
+        function saveMockData() {
+            localStorage.setItem(USER_DATA_KEY, JSON.stringify(mockUserData));
+        }
+        
+        // --- Account Form Handlers ---
+        
+        function saveAccountChanges(e) {
+            e.preventDefault();
+            const lang = getLang();
+            const content = langContent[lang];
+
+            const newName = document.getElementById('displayNameInput').value.trim();
+            const newGmail = document.getElementById('gmailInput').value.trim();
+            const newPass = document.getElementById('newPassInput').value;
+            const confirmPass = document.getElementById('confirmPassInput').value;
+
+            // 1. Validate Account Details
+            if (!newName || !newGmail) {
+                alert(content.alertMissingInput);
+                return;
+            }
+            
+            let isPasswordChange = false;
+            
+            // 2. Validate Password Change (Only if fields are filled)
+            if (newPass || confirmPass) {
+                 isPasswordChange = true;
+                 if (newPass !== confirmPass) {
+                    alert(content.alertPassMatch);
+                    document.getElementById('confirmPassInput').value = '';
+                    return;
+                }
+                if (newPass.length < 6) {
+                     alert(lang === 'th' ? 'รหัสผ่านต้องมีอย่างน้อย 6 ตัวอักษร' : 'Password must be at least 6 characters.');
+                     return;
+                }
+            }
+
+            // 3. Save Data (Mockup)
+            mockUserData.displayName = newName;
+            mockUserData.gmail = newGmail;
+            saveMockData();
+            
+            // 4. Feedback and UI Reset
+            // Alert ถูกลบออกแล้ว
+
+            toggleEditMode(false); // Close edit mode after saving
+            updateView(); // Re-render summary card
+        }
+
+        // --- Profile Photo Logic ---
+        function changeProfilePhoto() {
+            // Clicks the hidden file input to trigger the file dialog
+            document.getElementById('avatarFileInput').click();
+        }
+        
+        function removeProfilePhoto() {
+            const lang = getLang();
+            mockUserData.avatar = DEFAULT_AVATAR; // Revert to anonymous.png
+            saveMockData();
+            // Alert ถูกลบออกแล้ว
+            updateView();
+        }
+
+        function handleFileSelect(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                mockUserData.avatar = e.target.result; // Save Base64 data
+                saveMockData();
+                updateView(); // Re-render with new avatar
+            };
+            reader.readAsDataURL(file);
+        }
+
+
+        // --- UI Rendering Logic ---
+        function updateText(lang) {
+            const content = langContent[lang];
+            
+            // General UI
+            document.getElementById('page-title').textContent = content.pageTitle;
+            document.getElementById('nav-home').querySelector('.label').textContent = content.navHome;
+            document.getElementById('nav-settings').querySelector('.label').textContent = content.navSettings;
+            document.getElementById('lang-toggle-button').textContent = getLang().toUpperCase() === 'TH' ? 'EN' : 'TH';
+            document.getElementById('btnLogout').textContent = content.btnLogout;
+            document.getElementById('statusDisplay').textContent = content.status;
+            
+            // Account Form Labels
+            document.getElementById('settingsTitle').textContent = content.settingsTitle;
+            document.getElementById('passwordTitle').textContent = content.passwordTitle;
+            document.getElementById('labelDisplayName').textContent = content.labelDisplayName;
+            document.getElementById('labelUsername').textContent = content.labelUsername;
+            document.getElementById('labelGmail').textContent = content.labelGmail;
+            document.getElementById('labelNewPass').textContent = content.labelNewPass;
+            document.getElementById('labelConfirmPass').textContent = content.labelConfirmPass;
+            document.getElementById('btnSaveChanges').textContent = content.btnSaveChanges;
+            document.getElementById('photoControlTitle').textContent = content.photoControlTitle;
+            document.getElementById('btnChangePhoto').textContent = content.btnChangePhoto;
+            document.getElementById('btnRemovePhoto').textContent = content.btnRemovePhoto;
+
+            // FIX: อัปเดตข้อความปุ่มเสร็จสิ้น
+            const btnDone = document.getElementById('btnDoneEditing');
+            if(btnDone) btnDone.textContent = content.btnDoneEditing;
+
+            // Modal Text (Logout Modal)
+            document.getElementById('modalTitle').textContent = content.modalTitle;
+            document.getElementById('modalDesc').textContent = content.modalDesc;
+            document.getElementById('btnCancel').textContent = content.btnCancel;
+            document.getElementById('btnConfirm').textContent = content.btnConfirm;
+        }
+
+        function renderAccountData() {
+            // Load and render data into form fields
+            document.getElementById('displayNameInput').value = mockUserData.displayName;
+            document.getElementById('gmailInput').value = mockUserData.gmail;
+            document.getElementById('usernameInput').value = langContent[getLang()].username; // Always 'A' (mock)
+            
+            // Display Summary Card (Name and Avatar)
+            document.getElementById('usernameDisplay').textContent = mockUserData.displayName;
+            document.getElementById('profileAvatar').src = mockUserData.avatar;
+            
+            // Display Avatar in Edit Section Preview
+            const editPreview = document.getElementById('editAvatarPreview');
+            if (editPreview) editPreview.src = mockUserData.avatar;
+        }
+
+        // --- View Control ---
+
+        function toggleEditMode(shouldOpen) {
+            const editContainer = document.getElementById('accountEditContainer');
+            const summaryCard = document.getElementById('profileSummaryCard');
+            const logoutBtn = document.getElementById('btnLogout');
+
+            if (shouldOpen) {
+                // Enter Edit Mode
+                renderAccountData(); 
+                editContainer.style.display = 'block';
+                summaryCard.style.display = 'none';
+                logoutBtn.style.display = 'none';
+            } else {
+                // Exit Edit Mode (Done button clicked)
+                editContainer.style.display = 'none';
+                summaryCard.style.display = 'flex'; // Show summary card
+                logoutBtn.style.display = 'block';
+            }
+        }
+
+
+        // --- Theme/Language/Initial Functions ---
+        const themeToggle = document.getElementById('theme-toggle-checkbox');
+
+        themeToggle.addEventListener("change", function() {
+            document.body.classList.toggle("dark-theme", this.checked);
+            localStorage.setItem("theme", this.checked ? "dark" : "light");
+            // FIX: เรียก updateView() เพื่อโหลดภาษา, ข้อมูล และอัปเดต UI ทั้งหมด
+            updateView();
+        });
+
+        function toggleLanguage() {
+            let newLang = (getLang() === 'th') ? 'en' : 'th';
+            localStorage.setItem('lang', newLang);
+            // FIX: เรียก updateView() เพื่อโหลดภาษา, ข้อมูล และอัปเดต UI ทั้งหมด
+            updateView();
+        }
+
+        function applyThemeAndLangOnLoad() {
+            // Load Theme
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            if (savedTheme === 'dark') {
+                document.body.classList.add('dark-theme');
+                themeToggle.checked = true;
+            } else {
+                document.body.classList.remove('dark-theme');
+                themeToggle.checked = false;
+            }
+            // Note: updateView() handles calling updateText() and renderAccountData()
+        }
+
+        function updateView() {
+            loadMockData(); // Load data first (handles checking for DEFAULT_AVATAR)
+            applyThemeAndLangOnLoad();
+            updateText(getLang());
+            renderAccountData(); // Render loaded data
+        }
+        
+        // --- Logout Modal Logic ---
+        function openLogoutModal() {
+            updateText(getLang());
+            document.getElementById('logoutModal').style.display = 'flex';
+        }
+
+        function closeLogoutModal() {
+            document.getElementById('logoutModal').style.display = 'none';
+        }
+
+        function confirmLogout() {
+            // Clear storage and redirect
+            localStorage.removeItem('isLoggedIn');
+            localStorage.removeItem('camCount'); 
+            // FIX: ลบข้อมูลผู้ใช้ทั้งหมดเมื่อ Logout
+            localStorage.removeItem(USER_DATA_KEY);
+            
+            window.location.href = 'login.html?v=' + Date.now(); 
+        }
+
+
+        // --- INITIALIZATION ---
+        document.addEventListener('DOMContentLoaded', () => {
+            if (localStorage.getItem('isLoggedIn') !== 'true') {
+                 window.location.href = 'login.html?v=' + Date.now(); 
+                 return;
+            }
+            
+            // Set initial view state: show summary card, hide edit container
+            document.getElementById('accountEditContainer').style.display = 'none';
+            document.getElementById('profileSummaryCard').style.display = 'flex';
+            document.getElementById('btnLogout').style.display = 'block';
+
+
+            updateView();
+            
+            // Event Listeners
+            document.getElementById('profileSummaryCard').addEventListener('click', () => toggleEditMode(true)); // Click card to EDIT
+            document.getElementById('accountForm').addEventListener('submit', saveAccountChanges);
+            document.getElementById('avatarFileInput').addEventListener('change', handleFileSelect); // Handle file selection
+            
+            window.onclick = function(event) {
+                if (event.target == document.getElementById('logoutModal')) {
+                    closeLogoutModal();
+                }
+            }
+        });
+        
+        // FIX: ฟังการเปลี่ยนแปลงภาษา/ธีม/ข้อมูลจากหน้าอื่น
+        window.addEventListener('storage', (event) => {
+            if (event.key === 'lang' || event.key === 'theme' || event.key === USER_DATA_KEY) { 
+                updateView();
+            }
+        });
+    </script>
+</body>
+</html>
