@@ -1,53 +1,243 @@
 <!DOCTYPE html>
 <html lang="th">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title id="page-title">ลืมรหัสผ่าน | Koi Health Monitor</title>
     <style>
         /* Base and Theme CSS */
-        :root { --background-color: #ffffff; --text-color: #000000; --input-bg-color: #ffffff; --input-border-color: #ccc; --reset-button-bg: #ffc107; --reset-button-text: #000000; --link-color: #007bff; }
-        body.dark-theme { --background-color: #121212; --text-color: #e0e0e0; --input-bg-color: #1e1e1e; --input-border-color: #333; --reset-button-bg: #ffc107; --reset-button-text: #121212; --link-color: #4da6ff; }
+        :root {
+            --background-color: #ffffff;
+            --text-color: #000000;
+            --input-bg-color: #ffffff;
+            --input-border-color: #ccc;
+            --link-color: #007bff;
+            /* NEW GRADIENT MOCKUP (LIGHT) */
+            --reset-button-text: #ffffff;
+            /* ข้อความปุ่มรีเซ็ตเป็นสีขาว */
+            --reset-gradient: linear-gradient(to right, #4facfe 0%, #00f2fe 100%);
+        }
+
+        body.dark-theme {
+            --background-color: #121212;
+            --text-color: #e0e0e0;
+            --input-bg-color: #1e1e1e;
+            --input-border-color: #333;
+            --link-color: #4da6ff;
+            /* NEW GRADIENT MOCKUP (DARK) */
+            --reset-button-text: #121212;
+            /* ข้อความปุ่มรีเซ็ตเป็นสีเข้ม */
+            --reset-gradient: linear-gradient(to right, #6a85b6 0%, #bac8e0 100%);
+        }
+
         /* Global Styles */
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: var(--background-color); color: var(--text-color); margin: 0; padding: 0; display: flex; justify-content: center; align-items: center; min-height: 100vh; transition: background-color 0.3s, color 0.3s; }
-        .auth-container { width: 100%; max-width: 400px; padding: 40px 20px; text-align: center; position: relative; }
-        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .auth-container {
+            width: 100%;
+            max-width: 400px;
+            padding: 40px 20px;
+            text-align: center;
+            position: relative;
+        }
+
         /* Fixed Position Elements */
-        .theme-toggle { position: absolute; top: 30px; left: 30px; }
-        .lang-toggle-button { position: absolute; top: 30px; right: 30px; padding: 8px 12px; background-color: #f0f0f0; color: #343a40; border: 1px solid #ccc; border-radius: 5px; cursor: pointer; font-weight: bold; transition: background-color 0.3s; text-transform: uppercase; z-index: 10; } 
-        .dark-theme .lang-toggle-button { background-color: #333; color: #f0f0f0; border-color: #555; }
-        
+        .theme-toggle {
+            position: absolute;
+            top: 30px;
+            left: 30px;
+        }
+
+        .lang-toggle-button {
+            position: absolute;
+            top: 30px;
+            right: 30px;
+            padding: 8px 12px;
+            background-color: #f0f0f0;
+            color: #343a40;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background-color 0.3s;
+            text-transform: uppercase;
+            z-index: 10;
+        }
+
+        .dark-theme .lang-toggle-button {
+            background-color: #333;
+            color: #f0f0f0;
+            border-color: #555;
+        }
+
         /* Logo (Non-Fixed on Forget) */
-        .logo-fixed { margin-bottom: 30px; }
-        .logo-fixed img { 
-            width: 200px; 
-            filter: drop-shadow(0 0 5px rgba(0, 0, 0, 0.1)); 
-        } 
+        .logo-fixed {
+            margin-bottom: 30px;
+        }
+
+        .logo-fixed img {
+            width: 200px;
+            filter: drop-shadow(0 0 5px rgba(0, 0, 0, 0.1));
+        }
 
         /* Form Layout */
-        #forgot-form { margin-top: 20px; } 
-        .input-group { margin-bottom: 20px; }
-        .input-group label { display: block; font-weight: bold; text-transform: none; margin-bottom: 5px; letter-spacing: 1px; font-size: 1em; }
-        .input-group input { width: 100%; padding: 10px; border: 2px solid var(--input-border-color); background-color: var(--input-bg-color); border-radius: 5px; box-sizing: border-box; color: var(--text-color); font-size: 1.1em; text-align: center; }
-        
-        /* Buttons */
-        .reset-button { width: 100%; padding: 12px; border: none; border-radius: 8px; font-size: 1.2em; font-weight: bold; cursor: pointer; transition: background-color 0.3s, transform 0.1s; background-color: var(--reset-button-bg); color: var(--reset-button-text); }
-        .reset-button:active { transform: translateY(1px); opacity: 0.8; }
+        #forgot-form {
+            margin-top: 20px;
+        }
+
+        .input-group {
+            margin-bottom: 25px;
+        }
+
+        /* Input Style for Label (Underline Style) */
+        .input-group label {
+            display: block;
+            font-weight: bold;
+            text-transform: none;
+            margin-bottom: 10px;
+            letter-spacing: 1px;
+            font-size: 1.1em;
+            text-align: left;
+        }
+
+        /* Input Style for Input Field (Underline Style) */
+        .input-group input {
+            width: 100%;
+            padding: 10px;
+            border: none;
+            border-bottom: 2px solid var(--input-border-color);
+            background-color: transparent;
+            border-radius: 0;
+            box-sizing: border-box;
+            color: var(--text-color);
+            font-size: 1.1em;
+            text-align: left;
+        }
+
+        /* Buttons (NEW GRADIENT STYLE) */
+        .reset-button {
+            width: 100%;
+            padding: 15px;
+            /* ทำให้ใหญ่ขึ้นเหมือนปุ่ม Login */
+            border: none;
+            border-radius: 25px;
+            /* ขอบโค้งมนเหมือน Login */
+            font-size: 1.2em;
+            font-weight: normal;
+            /* น้ำหนักตัวอักษรเหมือน Login */
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.1s;
+
+            background-image: var(--reset-gradient);
+            /* ใช้ Gradient */
+            color: var(--reset-button-text);
+            /* ใช้ Variable สำหรับสีข้อความ */
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            /* เพิ่มเงาเหมือน Login */
+        }
+
+        .reset-button:active {
+            transform: translateY(1px);
+            opacity: 0.8;
+        }
 
         /* Links */
-        .links a { text-decoration: none; color: var(--link-color); font-weight: bold; margin: 0 5px; text-transform: none; font-size: 0.9em; cursor: pointer; }
+        .links {
+            margin-top: 25px;
+        }
 
-        .desc-text { font-size: 0.9em; color: #6c757d; margin-bottom: 30px; }
-        
+        /* ปรับ margin links */
+        .links a {
+            text-decoration: none;
+            color: var(--link-color);
+            font-weight: bold;
+            margin: 0 5px;
+            text-transform: none;
+            font-size: 0.9em;
+            cursor: pointer;
+        }
+
+        .desc-text {
+            font-size: 0.9em;
+            color: #6c757d;
+            margin-bottom: 30px;
+        }
+
         /* Theme Toggle Switch styles */
-        .toggle-switch { position: relative; display: inline-block; width: 50px; height: 25px; }
-        .toggle-switch input { opacity: 0; width: 0; height: 0; }
-        .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #ffc107; transition: .4s; border-radius: 25px; }
-        .slider:before { position: absolute; content: ""; height: 17px; width: 17px; left: 4px; bottom: 4px; background-color: white; transition: .4s; border-radius: 50%; }
-        input:checked + .slider { background-color: #2c3e50; }
-        input:checked + .slider:before { transform: translateX(25px); }
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 50px;
+            height: 25px;
+        }
+
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ffc107;
+            transition: .4s;
+            border-radius: 25px;
+        }
+
+        /* ธีมสว่าง: ปุ่มกลม (ใช้ :before) ภายในมีพระอาทิตย์ */
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 17px;
+            width: 17px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            content: "\2600";
+            font-size: 16px;
+            color: #ffc107;
+            text-shadow: 0 0 2px rgba(0, 0, 0, 0.2);
+        }
+
+        /* ธีมมืด: พื้นหลังน้ำเงินเข้ม */
+        input:checked+.slider {
+            background-color: #2c3e50;
+        }
+
+        /* เมื่อ Check (Dark Mode): เลื่อนปุ่มกลมไปขวา และเปลี่ยนไอคอนเป็นพระจันทร์ */
+        input:checked+.slider:before {
+            transform: translateX(25px);
+            background-color: #2c3e50;
+            color: white;
+            content: "\1F319";
+            font-size: 14px;
+            text-shadow: none;
+        }
     </style>
 </head>
+
 <body>
     <div class="auth-container">
 
@@ -60,9 +250,9 @@
         <button id="lang-toggle-button" class="lang-toggle-button" onclick="toggleLanguage()">
             EN
         </button>
-        
+
         <div class="logo-fixed">
-            <img src="LogoKoi.png" alt="Logo"> 
+            <img src="LogoKoi.png" alt="Logo">
         </div>
 
         <h1 style="color:var(--text-color); font-size:1.8em;" id="title-forgot">ลืมรหัสผ่าน?</h1>
@@ -72,9 +262,9 @@
         <form id="forgot-form" onsubmit="handleForgot(event)">
             <div class="input-group">
                 <label for="reset-email" id="label-email">อีเมล</label>
-                <input type="email" id="reset-email" name="email" required>
+                <input type="email" id="reset-email" name="email" required placeholder="Enter your email address">
             </div>
-            
+
             <button type="submit" class="reset-button" id="btn-send">ส่งลิงก์ตั้งรหัสผ่าน</button>
         </form>
 
@@ -87,19 +277,32 @@
     <script>
         // --- CONTENT MAPS ---
         const langContent = {
-            'th': { title: 'ลืมรหัสผ่าน?', desc: 'กรุณาใส่อีเมลของคุณเพื่อรับลิงก์สำหรับตั้งรหัสผ่านใหม่', email: 'อีเมล', btnSend: 'ส่งลิงก์ตั้งรหัสผ่าน', linkLogin: '← กลับไปหน้าเข้าสู่ระบบ' },
-            'en': { title: 'FORGOT PASSWORD?', desc: 'Please enter your email to receive a password reset link.', email: 'EMAIL', btnSend: 'SEND RESET LINK', linkLogin: '← Back to Login' }
+            'th': {
+                title: 'ลืมรหัสผ่าน?',
+                desc: 'กรุณาใส่อีเมลของคุณเพื่อรับลิงก์สำหรับตั้งรหัสผ่านใหม่',
+                email: 'อีเมล',
+                emailPlaceholder: 'กรอกอีเมลของคุณ',
+                btnSend: 'ส่งลิงก์ตั้งรหัสผ่าน',
+                linkLogin: '← กลับไปหน้าเข้าสู่ระบบ'
+            },
+            'en': {
+                title: 'FORGOT PASSWORD?',
+                desc: 'Please enter your email to receive a password reset link.',
+                email: 'EMAIL',
+                emailPlaceholder: 'Enter your email address',
+                btnSend: 'SEND RESET LINK',
+                linkLogin: '← Back to Login'
+            }
         };
 
         function getLang() { return localStorage.getItem('lang') || 'th'; }
-        
+
         function toggleLanguage() {
             let newLang = (getLang() === 'th') ? 'en' : 'th';
             localStorage.setItem('lang', newLang);
-            // FIX: เรียก applyThemeAndLangOnLoad เพื่อโหลดภาษาใหม่และซิงค์ธีม
             applyThemeAndLangOnLoad();
         }
-        
+
         function updateText(lang) {
             const content = langContent[lang];
             document.getElementById('title-forgot').textContent = content.title;
@@ -109,18 +312,20 @@
             document.getElementById('link-login').textContent = content.linkLogin;
             document.getElementById('lang-toggle-button').textContent = getLang().toUpperCase() === 'TH' ? 'EN' : 'TH';
             document.getElementById('page-title').textContent = content.title;
+
+            // อัปเดต Placeholder
+            document.getElementById('reset-email').placeholder = content.emailPlaceholder;
         }
 
         // --- THEME TOGGLE (Initialization & Listener) ---
         const themeToggle = document.getElementById('theme-toggle-checkbox');
 
-        themeToggle.addEventListener("change", function() {
+        themeToggle.addEventListener("change", function () {
             document.body.classList.toggle("dark-theme", this.checked);
             localStorage.setItem("theme", this.checked ? "dark" : "light");
-            // FIX: เมื่อเปลี่ยนธีม ต้องโหลดข้อความภาษาใหม่ด้วย
             updateText(getLang());
         });
-        
+
         function applyThemeAndLangOnLoad() {
             // Load Theme
             const savedTheme = localStorage.getItem('theme') || 'light';
@@ -143,11 +348,9 @@
             const email = document.getElementById('reset-email').value;
             const lang = getLang();
 
-            // Alert ยังคงอยู่ตามคำขอ
-            alert((lang === 'th' ? 'ระบบได้ส่งลิงก์ตั้งรหัสผ่านไปยังอีเมล: ' : 'Reset link sent to email: ') + email);
-            
-            // นำทางกลับหน้า Login
-            window.location.href = 'index.html?v=' + Date.now(); 
+            // FIX: นำทางไปยัง resetpass.html พร้อมส่งอีเมลเป็น Query Parameter
+            // ใช้ encodeURIComponent เพื่อเข้ารหัสอีเมลให้ปลอดภัยใน URL
+            window.location.href = 'resetpass.html?email=' + encodeURIComponent(email) + '&v=' + Date.now();
         }
 
         // --- INITIALIZATION ---
@@ -155,13 +358,14 @@
             applyThemeAndLangOnLoad();
             document.getElementById('forgot-form').addEventListener('submit', handleForgot);
         });
-        
+
         // FIX: ฟังการเปลี่ยนแปลงภาษา/ธีมจากหน้าอื่น (Storage Event)
         window.addEventListener('storage', (event) => {
-            if (event.key === 'lang' || event.key === 'theme') { 
+            if (event.key === 'lang' || event.key === 'theme') {
                 applyThemeAndLangOnLoad();
             }
         });
     </script>
 </body>
+
 </html>

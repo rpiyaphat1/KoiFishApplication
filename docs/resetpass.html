@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title id="page-title">ลงทะเบียน | Koi Health Monitor</title>
+    <title id="page-title">รีเซ็ตรหัสผ่าน | Koi Monitor</title>
     <style>
         /* Base and Theme CSS (Adapted from Register/Login) */
         :root {
@@ -13,7 +13,11 @@
             --input-bg-color: #ffffff;
             --input-border-color: #ccc;
             --link-color: #007bff;
-            --reg-button-text: #ffffff;
+            --button-primary-bg: #4facfe;
+            --button-primary-text: #ffffff;
+
+            /* ตัวแปรสำหรับ Gradient Button */
+            --reset-button-text: #ffffff;
             --reg-gradient: linear-gradient(to right, #4facfe 0%, #00f2fe 100%);
         }
 
@@ -23,7 +27,11 @@
             --input-bg-color: #1e1e1e;
             --input-border-color: #333;
             --link-color: #4da6ff;
-            --reg-button-text: #121212;
+            --button-primary-bg: #495057;
+            --button-primary-text: #e0e0e0;
+
+            /* ตัวแปรสำหรับ Gradient Button ใน Dark Mode */
+            --reset-button-text: #121212;
             --reg-gradient: linear-gradient(to right, #6a85b6 0%, #bac8e0 100%);
         }
 
@@ -78,7 +86,7 @@
             border-color: #555;
         }
 
-        /* Logo (Non-Fixed on Register) */
+        /* Logo */
         .logo-fixed {
             margin-bottom: 30px;
         }
@@ -89,29 +97,42 @@
         }
 
         /* Form Layout */
-        #register-form {
+        #reset-form {
             margin-top: 20px;
+            background-color: var(--background-color);
+            /* ใช้พื้นหลังตามธีมหลัก */
+            padding: 0;
+            /* ลบ padding/box-shadow เพื่อให้เข้ากับสไตล์ register */
+            border-radius: 0;
+            box-shadow: none;
         }
 
+        /* Reset Title & Prompt */
+        #title-reset {
+            font-size: 1.8em;
+            font-weight: bold;
+            margin-bottom: 5px;
+            color: var(--text-color);
+        }
+
+        #reset-prompt {
+            font-size: 0.9em;
+            color: var(--text-color);
+            opacity: 0.7;
+            margin-bottom: 30px;
+        }
+
+        /* Input Styles - ADAPTED FROM REGISTER.HTML */
         .input-group {
             margin-bottom: 25px;
+            /* 25px เหมือน register */
         }
 
-        /* Input Style for Label (Underline Style) */
-        .input-group label {
-            display: block;
-            font-weight: bold;
-            text-transform: none;
-            margin-bottom: 10px;
-            letter-spacing: 1px;
-            font-size: 1.1em;
-            text-align: left;
-        }
-
-        /* Input Style for Input Field (Underline Style) */
         .input-group input {
             width: 100%;
             padding: 10px;
+            /* 10px เหมือน register */
+            /* FIX: สไตล์ Underline */
             border: none;
             border-bottom: 2px solid var(--input-border-color);
             background-color: transparent;
@@ -122,28 +143,32 @@
             text-align: left;
         }
 
-        /* Buttons (NEW GRADIENT STYLE) */
-        .reg-button {
+        /* Button Style (APPLIED GRADIENT/ROUNDED STYLE from register.html) */
+        #btn-reset {
             width: 100%;
             padding: 15px;
             border: none;
+            /* FIX: โค้งมน 25px เหมือน register */
             border-radius: 25px;
             font-size: 1.2em;
             font-weight: normal;
             cursor: pointer;
             transition: background-color 0.3s, transform 0.1s;
 
+            /* FIX: ใช้ Gradient สีฟ้า */
             background-image: var(--reg-gradient);
-            color: var(--reg-button-text);
+            color: var(--reset-button-text);
+            /* FIX: ใช้ Box Shadow เหมือน register */
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            margin-top: 15px;
         }
 
-        .reg-button:active {
+        #btn-reset:active {
             transform: translateY(1px);
-            opacity: 0.8;
+            opacity: 0.9;
         }
 
-        /* Links */
+        /* Links (Footer) */
         .links {
             margin-top: 25px;
         }
@@ -153,17 +178,16 @@
             color: var(--link-color);
             font-weight: bold;
             margin: 0 5px;
-            text-transform: none;
             font-size: 0.9em;
             cursor: pointer;
         }
 
-        /* Error Message Style for Password Mismatch */
+        /* Error Message Style */
         .error-message {
             color: #dc3545;
             font-weight: bold;
-            margin-top: -15px;
-            margin-bottom: 5px;
+            margin-top: -10px;
+            margin-bottom: 15px;
             text-align: center;
         }
 
@@ -245,42 +269,32 @@
         </button>
 
         <div class="logo-fixed">
-            <img src="LogoKoi.png" alt="Logo">
+            <img src="LogoKoi.png" alt="Koi Monitor Logo">
         </div>
 
-        <h1 style="color:var(--text-color); font-size:1.8em;" id="title-register">ลงทะเบียน</h1>
+        <h1 id="title-reset">Reset account password</h1>
+        <p id="reset-prompt">Enter a new password for user@koi.com</p>
 
-        <form id="register-form" onsubmit="handleRegister(event)">
+        <form id="reset-form" onsubmit="handleResetPassword(event)">
+
             <div class="input-group">
-                <label for="reg-email" id="label-email">อีเมล</label>
-                <input type="email" id="reg-email" name="email" required placeholder="Enter your email address">
+                <input type="password" id="new-password" name="password" required placeholder="Password">
             </div>
 
             <div class="input-group">
-                <label for="reg-username" id="label-username">ชื่อผู้ใช้</label>
-                <input type="text" id="reg-username" name="username" required placeholder="Choose a username">
-            </div>
-
-            <div class="input-group">
-                <label for="reg-password" id="label-password">รหัสผ่าน</label>
-                <input type="password" id="reg-password" name="password" required placeholder="Create a password">
-            </div>
-
-            <div class="input-group">
-                <label for="reg-confirm-password" id="label-confirm-password">ยืนยันรหัสผ่าน</label>
-                <input type="password" id="reg-confirm-password" name="confirm-password" required
-                    placeholder="Confirm your password">
+                <input type="password" id="confirm-password" name="confirm-password" required
+                    placeholder="Confirm password">
             </div>
 
             <p id="password-mismatch-message" class="error-message hidden">
                 Passwords do not match.
             </p>
 
-            <button type="submit" class="reg-button" id="btn-create">สร้างบัญชี</button>
+            <button type="submit" id="btn-reset">Reset password</button>
         </form>
 
-        <div class="links" style="margin-top: 25px;">
-            <a href="index.html" id="link-login">← กลับไปหน้าเข้าสู่ระบบ</a>
+        <div class="links">
+            <a href="index.html" id="link-login">← Back to Login</a>
         </div>
 
     </div>
@@ -289,39 +303,31 @@
         // --- CONTENT MAPS ---
         const langContent = {
             'th': {
-                title: 'ลงทะเบียน',
-                email: 'อีเมล',
-                emailPlaceholder: 'กรอกอีเมลของคุณ',
-                username: 'ชื่อผู้ใช้',
-                usernamePlaceholder: 'ตั้งชื่อผู้ใช้',
-                password: 'รหัสผ่าน',
-                passwordPlaceholder: 'ตั้งรหัสผ่าน',
-                confirmPassword: 'ยืนยันรหัสผ่าน',
-                confirmPasswordPlaceholder: 'ยืนยันรหัสผ่านของคุณ',
-                btnCreate: 'สร้างบัญชี',
+                title: 'รีเซ็ตรหัสผ่าน',
+                prompt: 'ตั้งรหัสผ่านใหม่สำหรับ user@koi.com',
+                passwordPlaceholder: 'รหัสผ่าน',
+                confirmPasswordPlaceholder: 'ยืนยันรหัสผ่าน',
+                btnReset: 'รีเซ็ตรหัสผ่าน',
                 linkLogin: '← กลับไปหน้าเข้าสู่ระบบ',
-                mismatchError: 'รหัสผ่านไม่ตรงกัน'
+                mismatchError: 'รหัสผ่านไม่ตรงกัน',
+                alertSuccess: 'รีเซ็ตรหัสผ่านสำเร็จ! กรุณาเข้าสู่ระบบ'
             },
             'en': {
-                title: 'REGISTER',
-                email: 'EMAIL',
-                emailPlaceholder: 'Enter your email address',
-                username: 'USERNAME',
-                usernamePlaceholder: 'Choose a username',
-                password: 'PASSWORD',
-                passwordPlaceholder: 'Create a password',
-                confirmPassword: 'CONFIRM PASSWORD',
-                confirmPasswordPlaceholder: 'Confirm your password',
-                btnCreate: 'CREATE ACCOUNT',
+                title: 'Reset account password',
+                prompt: 'Enter a new password for user@koi.com',
+                passwordPlaceholder: 'Password',
+                confirmPasswordPlaceholder: 'Confirm password',
+                btnReset: 'Reset password',
                 linkLogin: '← Back to Login',
-                mismatchError: 'Passwords do not match'
+                mismatchError: 'Passwords do not match.',
+                alertSuccess: 'Password reset successful! Please log in.'
             }
         };
 
+        // --- UTILS ---
         function getLang() { return localStorage.getItem('lang') || 'th'; }
 
         function toggleLanguage() {
-            // ซ่อนข้อความแจ้งเตือนเมื่อเปลี่ยนภาษา
             document.getElementById('password-mismatch-message').classList.add('hidden');
             let newLang = (getLang() === 'th') ? 'en' : 'th';
             localStorage.setItem('lang', newLang);
@@ -331,31 +337,32 @@
         function updateText(lang) {
             const content = langContent[lang];
 
-            // อัปเดต Title และ Label
-            document.getElementById('title-register').textContent = content.title;
-            document.getElementById('label-email').textContent = content.email;
-            document.getElementById('label-username').textContent = content.username;
-            document.getElementById('label-password').textContent = content.password;
-            document.getElementById('label-confirm-password').textContent = content.confirmPassword;
-            document.getElementById('btn-create').textContent = content.btnCreate;
+            // NEW: ดึงอีเมลจาก URL
+            const urlParams = new URLSearchParams(window.location.search);
+            // FIX: ใช้ decodedURIComponent เพื่อให้อีเมลที่ถูกส่งมาแสดงผลถูกต้อง
+            const userEmail = decodeURIComponent(urlParams.get('email') || 'user@koi.com');
+
+            // Update Title, Prompt, and Button
+            document.getElementById('page-title').textContent = content.title;
+            document.getElementById('title-reset').textContent = content.title;
+            // FIX: ใช้ .replace เพื่อแทรกอีเมลเข้าไปในข้อความ Prompt
+            document.getElementById('reset-prompt').textContent = content.prompt.replace('user@koi.com', userEmail);
+            document.getElementById('btn-reset').textContent = content.btnReset;
             document.getElementById('link-login').textContent = content.linkLogin;
             document.getElementById('lang-toggle-button').textContent = getLang().toUpperCase() === 'TH' ? 'EN' : 'TH';
-            document.getElementById('page-title').textContent = content.title;
 
-            // อัปเดต Placeholder
-            document.getElementById('reg-email').placeholder = content.emailPlaceholder;
-            document.getElementById('reg-username').placeholder = content.usernamePlaceholder;
-            document.getElementById('reg-password').placeholder = content.passwordPlaceholder;
-            document.getElementById('reg-confirm-password').placeholder = content.confirmPasswordPlaceholder;
+            // Update Placeholder
+            document.getElementById('new-password').placeholder = content.passwordPlaceholder;
+            document.getElementById('confirm-password').placeholder = content.confirmPasswordPlaceholder;
 
-            // Update Error Message
+            // Update Error Message (Ensure it matches the current language if visible)
             const errorElement = document.getElementById('password-mismatch-message');
             if (!errorElement.classList.contains('hidden')) {
                 errorElement.textContent = content.mismatchError;
             }
         }
 
-        // --- THEME TOGGLE (Initialization & Listener) ---
+        // --- THEME/LANG INITIALIZATION ---
         const themeToggle = document.getElementById('theme-toggle-checkbox');
 
         themeToggle.addEventListener("change", function () {
@@ -379,50 +386,48 @@
             updateText(getLang());
         }
 
-        // --- REGISTER HANDLER (Validation on Submit) ---
-        function handleRegister(e) {
+        // --- RESET PASSWORD HANDLER (แก้ไขส่วนนี้) ---
+        function handleResetPassword(e) {
             e.preventDefault();
             const lang = getLang();
-            const password = document.getElementById('reg-password').value;
-            const confirmPassword = document.getElementById('reg-confirm-password').value;
+            const content = langContent[lang];
+            const newPassword = document.getElementById('new-password').value;
+            const confirmPassword = document.getElementById('confirm-password').value;
             const errorMessageElement = document.getElementById('password-mismatch-message');
 
-            const content = langContent[lang];
-
-            // 1. ซ่อนข้อความ error ก่อนเริ่มการตรวจสอบใหม่
             errorMessageElement.classList.add('hidden');
 
-            // 2. Check if passwords match (ตรวจสอบเมื่อกดปุ่ม)
-            if (password !== confirmPassword) {
-
-                // รหัสไม่ตรงกัน: แสดงข้อความ Error 
+            // 1. Password Match Validation
+            if (newPassword !== confirmPassword) {
                 errorMessageElement.textContent = content.mismatchError;
                 errorMessageElement.classList.remove('hidden');
-
-                return; // ***หยุดการลงทะเบียนเมื่อรหัสไม่ตรงกัน***
+                return;
             }
 
-            // 3. Validation ผ่านทั้งหมด
-            alert(lang === 'th' ? 'ลงทะเบียนสำเร็จ! กรุณาเข้าสู่ระบบ' : 'Registration successful! Please log in.');
+            // 2. Mock Password Strength (Optional, basic length check)
+            if (newPassword.length < 6) {
+                // แก้ไขข้อความแจ้งเตือนให้เป็นภาษาอังกฤษเมื่ออยู่ในโหมด EN
+                alert(lang === 'th' ? 'รหัสผ่านต้องมีอย่างน้อย 6 ตัวอักษร' : 'Password must be at least 6 characters long.');
+                return;
+            }
 
-            // 4. นำทางกลับหน้า Login
-            window.location.href = 'index.html?v=' + Date.now();
+            // 3. Success (Mock API call)
+            // โค้ดที่นี่ทำให้เกิดการ Alert ก่อน 
+            alert(content.alertSuccess);
+
+            // 4. Redirect to Login (ใช้ setTimeout เพื่อให้แน่ใจว่า Alert ถูกปิดก่อนการ Redirect)
+            setTimeout(() => {
+                window.location.href = 'index.html?v=' + Date.now();
+            }, 0);
         }
 
         // --- INITIALIZATION ---
         document.addEventListener('DOMContentLoaded', () => {
-            const errorMsg = document.getElementById('password-mismatch-message');
-
-            // บังคับซ่อนข้อความ Error ทันทีที่โหลด
-            if (errorMsg) {
-                errorMsg.classList.add('hidden');
-            }
-
+            document.getElementById('password-mismatch-message').classList.add('hidden');
             applyThemeAndLangOnLoad();
-            document.getElementById('register-form').addEventListener('submit', handleRegister);
+            document.getElementById('reset-form').addEventListener('submit', handleResetPassword);
         });
 
-        // FIX: ฟังการเปลี่ยนแปลงภาษา/ธีมจากหน้าอื่น (Storage Event)
         window.addEventListener('storage', (event) => {
             if (event.key === 'lang' || event.key === 'theme') {
                 applyThemeAndLangOnLoad();

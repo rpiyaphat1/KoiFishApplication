@@ -1,112 +1,425 @@
 <!DOCTYPE html>
 <html lang="th">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title id="page-title">หน้าหลัก | Koi Monitor</title>
     <style>
         /* Base and Theme CSS */
-        :root { 
-            --background-color: #ffffff; --text-color: #000000; --card-bg: #f8f8f8; --btn-primary: #007bff; 
-            --btn-danger: #dc3545; --btn-save: #28a745; /* สีเขียวบันทึก */
-            --btn-cancel-bg: #6c757d; /* สีเทายกเลิก */
+        :root {
+            --background-color: #ffffff;
+            --text-color: #000000;
+            --card-bg: #f8f8f8;
+            --btn-primary: #007bff;
+            --btn-danger: #dc3545;
+            /* Red (Light Mode) */
+            --btn-save: #28a745;
+            /* สีเขียวบันทึก */
+            --btn-cancel-bg: #6c757d;
+            /* สีเทายกเลิก */
+            --input-border-color: #ccc;
+            /* ใช้จาก index.html */
+            --input-bg-color: #ffffff;
+            --icon-color: #333333;
+            /* สีไอคอนเริ่มต้น */
         }
-        body.dark-theme { 
-            --background-color: #121212; --text-color: #e0e0e0; --card-bg: #1e1e1e; --btn-primary: #4da6ff; 
-            --btn-danger: #ef4444; --btn-save: #2ecc71; /* สีเขียวสว่าง */
-            --btn-cancel-bg: #495057; /* สีเทาเข้ม */
+
+        body.dark-theme {
+            --background-color: #121212;
+            --text-color: #e0e0e0;
+            --input-bg-color: #1e1e1e;
+            --card-bg: #1e1e1e;
+            --btn-primary: #4da6ff;
+            --btn-danger: #ef4444;
+            /* Red (Dark Mode) */
+            --btn-save: #2ecc71;
+            /* สีเขียวสว่าง */
+            --btn-cancel-bg: #495057;
+            /* สีเทาเข้ม */
+            --input-border-color: #333;
+            /* ใช้จาก index.html */
+            --icon-color: #e0e0e0;
+            /* สีไอคอนสำหรับ Dark Mode */
         }
-        
+
         /* Global Styles */
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: var(--background-color); color: var(--text-color); margin: 0; padding: 0; display: flex; flex-direction: column; align-items: center; min-height: 100vh; transition: background-color 0.3s, color 0.3s; }
-        .app-container { width: 100%; max-width: 400px; min-height: 100vh; background-color: var(--background-color); position: relative; }
-        .header { padding: 15px; text-align: center; font-size: 1.2em; font-weight: bold; background-color: var(--card-bg); border-bottom: 1px solid #ccc; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .app-container {
+            width: 100%;
+            max-width: 400px;
+            min-height: 100vh;
+            background-color: var(--background-color);
+            position: relative;
+        }
+
+        .header {
+            padding: 15px;
+            text-align: center;
+            font-size: 1.2em;
+            font-weight: bold;
+            background-color: var(--card-bg);
+            border-bottom: 1px solid #ccc;
+        }
 
         /* Toggles */
-        .top-fixed-controls { position: absolute; top: 15px; width: 90%; display: flex; justify-content: space-between; z-index: 10; }
-        .lang-toggle-button { padding: 8px 12px; background-color: #f0f0f0; color: #343a40; border: 1px solid #ccc; border-radius: 5px; cursor: pointer; font-weight: bold; transition: background-color 0.3s; }
-        body.dark-theme .lang-toggle-button { background-color: #333; color: #f0f0f0; border-color: #555; }
-        
+        .top-fixed-controls {
+            position: absolute;
+            top: 15px;
+            width: 90%;
+            display: flex;
+            justify-content: space-between;
+            z-index: 10;
+        }
+
+        .lang-toggle-button {
+            padding: 8px 12px;
+            background-color: #f0f0f0;
+            color: #343a40;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background-color 0.3s;
+        }
+
+        body.dark-theme .lang-toggle-button {
+            background-color: #333;
+            color: #f0f0f0;
+            border-color: #555;
+        }
+
         /* Theme Toggle Switch styles */
-        .toggle-switch { position: relative; display: inline-block; width: 50px; height: 25px; }
-        .toggle-switch input { opacity: 0; width: 0; height: 0; }
-        .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #ffc107; transition: .4s; border-radius: 25px; }
-        .slider:before { position: absolute; content: ""; height: 17px; width: 17px; left: 4px; bottom: 4px; background-color: white; transition: .4s; border-radius: 50%; }
-        input:checked + .slider { background-color: #2c3e50; }
-        input:checked + .slider:before { transform: translateX(25px); }
-        
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 50px;
+            height: 25px;
+        }
+
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ffc107;
+            transition: .4s;
+            border-radius: 25px;
+        }
+
+        /* ธีมสว่าง: ปุ่มกลม (ใช้ :before) ภายในมีพระอาทิตย์ */
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 17px;
+            width: 17px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            content: "\2600";
+            font-size: 16px;
+            color: #ffc107;
+            text-shadow: 0 0 2px rgba(0, 0, 0, 0.2);
+        }
+
+        /* ธีมมืด: พื้นหลังน้ำเงินเข้ม */
+        input:checked+.slider {
+            background-color: #2c3e50;
+        }
+
+        /* เมื่อ Check (Dark Mode): เลื่อนปุ่มกลมไปขวา และเปลี่ยนไอคอนเป็นพระจันทร์ */
+        input:checked+.slider:before {
+            transform: translateX(25px);
+            background-color: #2c3e50;
+            color: white;
+            content: "\1F319";
+            font-size: 14px;
+            text-shadow: none;
+        }
+
         /* Main Content */
-        .main-content { padding: 80px 15px 70px; text-align: center; }
-        .camera-list-item { 
-            background-color: var(--card-bg); 
-            padding: 15px; 
-            border-radius: 8px; 
-            margin-bottom: 10px; 
-            display: flex; 
-            justify-content: space-between; 
-            align-items: center; 
-            border: 1px solid #eee; 
-            cursor: pointer; 
+        .main-content {
+            padding: 80px 15px 70px;
+            text-align: center;
+        }
+
+        .camera-list-item {
+            background-color: var(--card-bg);
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border: 1px solid #eee;
+            cursor: pointer;
             font-weight: bold;
         }
-        
+
+        /* --- NEW: SVG Icon Styling --- */
+        .camera-list-item .cam-icon-wrapper {
+            /* ใช้ inline-block เพื่อจัดตำแหน่งร่วมกับ text ได้ */
+            display: inline-block;
+            align-items: center;
+            margin-right: 8px;
+            /* ทำให้ SVG มีสีตามธีม */
+            color: var(--icon-color);
+
+            /* **FIX: ปรับตำแหน่งแนวตั้งให้ตรงกับข้อความ** */
+            vertical-align: middle;
+            transform: translateY(1px);
+            /* ขยับลงมาเล็กน้อยตามที่คุณต้องการ */
+        }
+
+        .camera-list-item .cam-icon-wrapper svg {
+            width: 24px;
+            height: 20px;
+            stroke: currentColor;
+            fill: none;
+            /* เพื่อให้เป็น Outline */
+            stroke-width: 1.5;
+            /* ลบ margin-bottom ออก */
+        }
+
+        /* --- END: SVG Icon Styling --- */
+
+
         /* Add Button */
-        #btnAddCamera { padding: 15px; background-color: var(--btn-primary); color: white; border-radius: 12px; width: 100%; font-size: 1.1em; margin-top: 20px; border: none; }
-        
+        #btnAddCamera {
+            padding: 15px;
+            background-color: var(--btn-primary);
+            color: white;
+            border-radius: 12px;
+            width: 100%;
+            font-size: 1.1em;
+            margin-top: 20px;
+            border: none;
+        }
+
         /* Bottom Nav */
-        .bottom-nav { position: fixed; bottom: 0; width: 100%; max-width: 400px; background-color: var(--card-bg); border-top: 1px solid #ccc; display: flex; justify-content: space-around; padding: 5px 0; }
-        .nav-item { flex-grow: 1; text-align: center; color: #6c757d; font-size: 0.8em; padding: 10px 0; text-decoration: none; }
-        .nav-item.active { color: var(--btn-primary); }
-        .nav-item svg { width: 24px; height: 24px; display: block; margin: 0 auto 3px; stroke: currentColor; fill: none; stroke-width: 2; }
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            max-width: 400px;
+            background-color: var(--card-bg);
+            border-top: 1px solid #ccc;
+            display: flex;
+            justify-content: space-around;
+            padding: 5px 0;
+        }
+
+        .nav-item {
+            flex-grow: 1;
+            text-align: center;
+            color: #6c757d;
+            font-size: 0.8em;
+            padding: 10px 0;
+            text-decoration: none;
+        }
+
+        .nav-item.active {
+            color: var(--btn-primary);
+        }
+
+        .nav-item svg {
+            width: 24px;
+            height: 24px;
+            display: block;
+            margin: 0 auto 3px;
+            stroke: currentColor;
+            fill: none;
+            stroke-width: 2;
+        }
 
         /* Modal/Pop-up Styles */
-        .modal { display: none; position: fixed; z-index: 100; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; background-color: rgba(0,0,0,0.8); }
-        .modal-content { background-color: var(--card-bg); color: var(--text-color); margin: 10% auto; padding: 20px; border: 1px solid #888; width: 90%; max-width: 500px; border-radius: 10px; text-align: center; }
-        .close-btn { color: #aaa; float: right; font-size: 28px; font-weight: bold; cursor: pointer; }
-        .close-btn:hover { color: #fff; }
-        .modal-input { width: 85%; padding: 10px; margin-bottom: 10px; border: 1px solid #ccc; background-color: var(--background-color); color: var(--text-color); border-radius: 5px; text-align: center;}
-        
-        /* Buttons inside Modals */
-        .modal-button-confirm { 
-            border: none; padding: 10px; border-radius: 8px; font-weight: bold; width: 100%; 
+        .modal {
+            /* ต้องเป็น display: none; ใน CSS เพื่อซ่อนตอนเริ่มต้น */
+            display: none;
+            position: fixed;
+            z-index: 100;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.8);
+            /* ใช้ flex/justify/align เพื่อจัดกึ่งกลางเมื่อถูกเปิดใช้งานด้วย JS */
+            justify-content: center;
+            align-items: center;
         }
+
+        /* กฎหลักสำหรับ Modal Content (ใช้สำหรับ AddCam และ DeleteConfirm) */
+        .modal-content {
+            background-color: var(--card-bg);
+            color: var(--text-color);
+            /* ปรับ margin ให้สูงขึ้นเล็กน้อย (สำหรับ Modal ยืนยัน) */
+            margin: 25% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            /* ขนาดกะทัดรัดสำหรับ Modal ยืนยัน/จำกัดจำนวนกล้อง */
+            width: 70%;
+            max-width: 280px;
+            border-radius: 10px;
+            text-align: center;
+            position: relative;
+            /* เพื่อให้ absolute top/right ใน .close-btn ทำงานสัมพันธ์กับ Modal Content */
+            padding-top: 50px;
+            /* เพิ่ม padding ด้านบนเพื่อให้หัวข้อไม่ทับปุ่ม X/Back */
+        }
+
+        /* กฎเฉพาะสำหรับ Video Feed Modal (#videoFeedModal) ให้ใช้ขนาดกว้างเหมือนเดิม */
+        #videoFeedModal .modal-content {
+            margin: 10% auto;
+            /* กลับไปใช้ margin 10% auto (อยู่ต่ำลงมาหน่อย) */
+            width: 90%;
+            max-width: 500px;
+        }
+
+
+        .close-btn {
+            /* FIX: เปลี่ยนสไตล์ให้เป็นไอคอนย้อนกลับ */
+            color: var(--icon-color);
+            /* ใช้สีไอคอนตามธีม */
+            float: right;
+            cursor: pointer;
+
+            /* สไตล์สำหรับตำแหน่ง */
+            position: absolute;
+            /* ใช้ absolute เพื่อวางมุมบนขวา */
+            top: 15px;
+            right: 15px;
+            height: 24px;
+            width: 24px;
+            z-index: 110;
+        }
+
+        .close-btn:hover {
+            color: var(--btn-primary);
+            /* เปลี่ยนสีเมื่อ hover */
+        }
+
+        /* ต้องซ่อนไอคอน X ใน Video Modal เพราะมันมี Close-btn อีกตัวใน header */
+        #videoFeedModal .modal-content>.close-btn {
+            display: none;
+        }
+
+        /* --- START: MODAL INPUT FIELD FIX --- */
+        .modal-input {
+            width: 90%;
+            /* ปรับความกว้างให้สอดคล้องกับกรอบ input ของ index */
+            padding: 10px;
+            margin-bottom: 15px;
+            border: none;
+            /* ลบเส้นขอบเดิม */
+            border-bottom: 2px solid var(--input-border-color);
+            /* เพิ่มเส้นขอบด้านล่างเหมือน index */
+            background-color: transparent;
+            /* พื้นหลังโปร่งใส */
+            border-radius: 0;
+            /* ลบมุมมน */
+            box-sizing: border-box;
+            color: var(--text-color);
+            font-size: 1.1em;
+            text-align: center;
+        }
+
+        /* --- END: MODAL INPUT FIELD FIX --- */
+
+        /* Buttons inside Modals */
+        .modal-button-confirm {
+            border: none;
+            padding: 15px 10px;
+            border-radius: 8px;
+            font-weight: bold;
+            width: 90%;
+            /* FIX: ปรับความกว้างให้เท่ากับ Input Field */
+            max-width: 100%;
+            margin-top: 5px;
+        }
+
         /* Explicit Save Button for Edit Form (Green) */
         #btnSaveCamChanges {
             background-color: var(--btn-save) !important;
             color: white !important;
         }
-        /* Explicit Cancel Button for Edit Form (Gray) */
-        #editCameraForm button[type="button"] {
+
+        /* FIX: กำหนดให้ปุ่ม Cancel ใช้สีเทายกเลิก และใช้ padding/radius ที่ตรงกัน */
+        #editCameraForm button[onclick="closeCameraEditForm()"] {
             background-color: var(--btn-cancel-bg) !important;
             color: white !important;
+            padding: 15px 10px !important;
+            border-radius: 12px !important;
         }
 
-        .modal-limit-message p { margin-top: 15px; }
-        
+        .modal-limit-message p {
+            margin-top: 15px;
+        }
+
         /* Video Modal Specific */
-        #videoFeedArea { 
-            width: 100%; 
-            aspect-ratio: 16 / 9; 
-            background-color: #000; 
-            color: #fff; 
-            display: flex; 
-            align-items: center; 
-            justify-content: center; 
+        #videoFeedArea {
+            width: 100%;
+            aspect-ratio: 16 / 9;
+            background-color: #000;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             font-weight: bold;
             margin-top: 10px;
         }
-        
+
         /* Modal Header and Edit Button Styling */
         #videoModalHeader {
             display: flex;
             justify-content: space-between;
             align-items: center;
             width: 100%;
-            padding-bottom: 15px; 
+            padding-bottom: 15px;
         }
-        #videoModalHeader h4 { margin: 0; font-size: 1.2em; text-align: left; flex-grow: 1; }
-        .modal-content .close-btn { float: none; margin-left: 10px; }
-        
+
+        #videoModalHeader h4 {
+            margin: 0;
+            font-size: 1.2em;
+            text-align: left;
+            flex-grow: 1;
+        }
+
+        /* ปรับปุ่ม X ที่อยู่ใน Header ของ Video Modal */
+        #videoModalHeader .close-btn {
+            position: static;
+            height: auto;
+            width: auto;
+            margin-left: 10px;
+            top: auto;
+            right: auto;
+        }
+
         /* Edit Link Style */
         #btnEditCamera {
             font-size: 0.9em;
@@ -120,21 +433,62 @@
             text-decoration: none;
             display: inline-block;
         }
+
         /* Edit Form Specific */
-        #editCameraForm label { display: block; text-align: left; margin-top: 10px; font-size: 0.9em; opacity: 0.8; }
-        #editCameraForm input { width: 100%; margin-bottom: 15px; }
-        
+        #editCameraForm label {
+            display: block;
+            text-align: left;
+            margin-top: 10px;
+            font-size: 0.9em;
+            opacity: 0.8;
+        }
+
+        #editCameraForm input {
+            width: 100%;
+            margin-bottom: 15px;
+        }
+
         /* Delete button added to form */
-        #btnDeleteCameraInEdit { 
+        #btnDeleteCameraInEdit {
+            /* บังคับใช้สีแดง */
             background-color: var(--btn-danger) !important;
             color: white !important;
             margin-top: 20px;
+            /* ปรับขนาดและความโค้งให้ดูเหมือนปุ่ม Logout */
+            padding: 15px 10px !important;
+            border-radius: 12px !important;
+        }
+
+        /* FIX: ปรับ margin-top ของหัวข้อ Edit Connection ให้ชิดด้านบนของฟอร์ม */
+        #editFormTitle {
+            margin-top: 0px !important;
+            margin-bottom: 15px !important;
+        }
+
+        /* NEW FIX: ปรับ Spacing ภายใน Delete Confirm Modal โดยเฉพาะ */
+        #deleteConfirmModal h4 {
+            margin-bottom: 10px !important;
+            /* ลดช่องว่างใต้หัวข้อ */
+        }
+
+        #deleteConfirmModal p {
+            margin-bottom: 15px !important;
+            /* ลดช่องว่างก่อนถึงปุ่มแรก */
+            font-size: 0.9em;
+        }
+
+        #deleteConfirmModal button {
+            margin: 8px auto;
+            /* เพิ่ม margin แนวตั้งให้ปุ่ม */
+            padding: 12px 20px;
+            /* ทำให้ปุ่มดูหนาขึ้น */
         }
     </style>
 </head>
-<body class="dark-theme"> 
+
+<body class="dark-theme">
     <div class="app-container">
-        
+
         <div class="top-fixed-controls">
             <div class="theme-toggle">
                 <label class="toggle-switch">
@@ -150,66 +504,82 @@
         <div class="main-content">
             <h1 id="screen-title">รายการ IP Camera</h1>
             <p id="cam-info" style="color:#6c757d; font-size:0.9em; margin-bottom: 20px;"></p>
-            
+
             <div id="camera-list-container">
-                </div>
+            </div>
 
             <button id="btnAddCamera" onclick="openAddCamModal()">
                 + เพิ่มกล้อง (Add Camera)
             </button>
-            
-            </div>
-        
+
+        </div>
+
         <nav class="bottom-nav">
             <a href="main.html" class="nav-item active" id="nav-home">
-                <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+                <svg viewBox="0 0 24 24">
+                    <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+                    <polyline points="9 22 9 12 15 12 15 22" />
+                </svg>
                 <span class="label">หน้าหลัก</span>
             </a>
             <a href="settings.html" class="nav-item" id="nav-settings">
-                <svg viewBox="0 0 24 24"><path d="M12.22 2h-.44C11.19 2 11 2.19 11 2.44V4h2V2.44C13 2.19 12.81 2 12.56 2zM4.44 5L5 5.56L4.44 6L4 5.56L4.44 5zM20 5l.56.56L20.56 6L21 5.56L20 5zM4 12c0-4.42 3.58-8 8-8s8 3.58 8 8z"/></svg>
+                <svg viewBox="0 0 24 24">
+                    <path
+                        d="M12.22 2h-.44C11.19 2 11 2.19 11 2.44V4h2V2.44C13 2.19 12.81 2 12.56 2zM4.44 5L5 5.56L4.44 6L4 5.56L4.44 5zM20 5l.56.56L20.56 6L21 5.56L20 5zM4 12c0-4.42 3.58-8 8-8s8 3.58 8 8z" />
+                </svg>
                 <span class="label">ตั้งค่า</span>
             </a>
         </nav>
     </div>
-    
+
     <div id="addCamModal" class="modal">
         <div class="modal-content">
-            <span class="close-btn" onclick="closeAddCamModal()">&times;</span>
+            <span class="close-btn" onclick="closeAddCamModal()">
+                <svg id="backArrowIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                    stroke-linecap="round" stroke-linejoin="round" style="width: 24px; height: 24px; display: block;">
+                    <line x1="19" y1="12" x2="5" y2="12"></line>
+                    <polyline points="12 19 5 12 12 5"></polyline>
+                </svg>
+            </span>
             <h4 id="modalTitle" style="margin-bottom: 15px;">เพิ่มกล้อง IP Camera</h4>
-            
-            <form id="addCameraForm" onsubmit="addCameraMockup(event)"> 
+
+            <form id="addCameraForm" onsubmit="addCameraMockup(event)">
                 <div id="modalLoginForm">
                     <p id="modalCamCount" style="margin-bottom: 10px;"></p>
-                    <p style="font-size: 0.9em; margin-bottom: 15px;" id="modalLoginPrompt">กรอกข้อมูลการเข้าสู่ระบบกล้อง</p>
-                    
-                    <input type="text" id="camNameInput" class="modal-input" placeholder="ชื่อกล้อง (เช่น บ่อ 1, กล้องหลัก)" required>
+                    <p style="font-size: 0.9em; margin-bottom: 15px;" id="modalLoginPrompt">
+                        กรอกข้อมูลการเข้าสู่ระบบกล้อง</p>
+
+                    <input type="text" id="camNameInput" class="modal-input"
+                        placeholder="ชื่อกล้อง (เช่น บ่อ 1, กล้องหลัก)" required>
 
                     <input type="text" id="ipInput" class="modal-input" placeholder="IP Address / Host" required>
                     <input type="text" id="userInput" class="modal-input" placeholder="Username" required>
                     <input type="password" id="passInput" class="modal-input" placeholder="Password" required>
-                    
+
                     <button type="submit" class="modal-button-confirm" id="btnConfirmAdd">
                         ยืนยันการเพิ่มกล้อง
                     </button>
                 </div>
 
                 <div id="modalLimitMessage" style="display: none;" class="modal-limit-message">
-                    <p style="color: var(--btn-danger); font-weight: bold; margin-bottom: 5px;" id="modalLimitReached">กล้องของคุณครบ 2 ตัวแล้ว!</p>
+                    <p style="color: var(--btn-danger); font-weight: bold; margin-bottom: 5px;" id="modalLimitReached">
+                        กล้องของคุณครบ 2 ตัวแล้ว!</p>
                     <p style="margin-bottom: 10px;">รายการกล้องที่เชื่อมต่ออยู่:</p>
                     <div id="modalLimitCameraList" style="margin-bottom: 15px; text-align: left;">
-                        </div>
+                    </div>
                     <p id="modalUpgradePrompt">หากต้องการเพิ่มกล้องตัวที่ 3 - 6 กรุณาอัปเกรดเป็นแพ็กเกจ 6 กล้อง</p>
-                    <button class="modal-button-confirm" style="background-color: #ffc107; color: #333;" onclick="alert(langContent[getLang()].alertUpgrade)">
+                    <button class="modal-button-confirm" style="background-color: #ffc107; color: #333;"
+                        onclick="alert(langContent[getLang()].alertUpgrade)">
                         ซื้อแพ็กเกจ 459 บาท/เดือน
                     </button>
                 </div>
             </form>
         </div>
     </div>
-    
+
     <div id="videoFeedModal" class="modal">
         <div class="modal-content">
-            
+
             <div id="videoModalHeader">
                 <h4 id="videoModalTitle">วิดีโอสด: Fishcam 01</h4>
                 <div style="display: flex; align-items: center; gap: 10px;">
@@ -219,51 +589,65 @@
                     <span class="close-btn" onclick="closeVideoFeedModal()" style="position: static;">&times;</span>
                 </div>
             </div>
-            
+
             <div id="videoFeedArea">
                 [ LIVE VIDEO STREAM MOCKUP ]
             </div>
             <p style="font-size: 0.8em; margin-top: 10px; color: #999;" id="videoMockDesc">
-                </p> 
-            
+            </p>
+
             <form id="editCameraForm" style="text-align: center; display: none;" onsubmit="saveCameraChanges(event)">
-                <h4 id="editFormTitle" style="margin-top: 20px; margin-bottom: 15px;">แก้ไขการเชื่อมต่อ</h4>
-                <input type="hidden" id="originalCamName"> <label style="display: block; text-align: left; font-size: 0.9em; opacity: 0.8;" id="editLabelName">ชื่อกล้อง:</label>
+
+                <h4 id="editFormTitle" style="margin-top: 0px; margin-bottom: 15px;">แก้ไขการเชื่อมต่อ</h4>
+
+                <input type="hidden" id="originalCamName">
+
+                <label style="display: block; text-align: left; font-size: 0.9em; opacity: 0.8;"
+                    id="editLabelName">ชื่อกล้อง:</label>
                 <input type="text" id="editCamNameInput" class="modal-input" required>
 
-                <label style="display: block; text-align: left; font-size: 0.9em; opacity: 0.8;" id="editLabelIp">IP Address / Host:</label>
+                <label style="display: block; text-align: left; font-size: 0.9em; opacity: 0.8;" id="editLabelIp">IP
+                    Address / Host:</label>
                 <input type="text" id="editIpInput" class="modal-input" required>
 
-                <label style="display: block; text-align: left; font-size: 0.9em; opacity: 0.8;" id="editLabelUser">Username:</label>
+                <label style="display: block; text-align: left; font-size: 0.9em; opacity: 0.8;"
+                    id="editLabelUser">Username:</label>
                 <input type="text" id="editUserInput" class="modal-input" required>
-                
-                <label style="display: block; text-align: left; font-size: 0.9em; opacity: 0.8;" id="editLabelPass">Password:</label>
+
+                <label style="display: block; text-align: left; font-size: 0.9em; opacity: 0.8;"
+                    id="editLabelPass">Password:</label>
                 <input type="password" id="editPassInput" class="modal-input" required>
-                
-                <button type="submit" id="btnSaveCamChanges" class="modal-button-confirm" style="background-color: var(--btn-save); margin-top: 10px;">
+
+                <button type="submit" id="btnSaveCamChanges" class="modal-button-confirm"
+                    style="background-color: var(--btn-save); margin-top: 10px;">
                     บันทึกการแก้ไข
                 </button>
-                
-                <button type="button" id="btnDeleteCameraInEdit" class="modal-button-confirm" style="background-color: var(--btn-danger); margin-top: 10px;">
+
+                <button type="button" id="btnDeleteCameraInEdit" class="modal-button-confirm"
+                    style="background-color: var(--btn-danger); margin-top: 20px;">
                     ลบกล้อง
                 </button>
-                <button type="button" class="modal-button-confirm" style="background-color: var(--btn-cancel-bg); margin-top: 10px;" onclick="closeCameraEditForm()">
+                <button type="button" class="modal-button-confirm"
+                    style="background-color: var(--btn-cancel-bg); margin-top: 10px;" onclick="closeCameraEditForm()">
                     ยกเลิก
                 </button>
             </form>
         </div>
     </div>
-    
+
     <div id="deleteConfirmModal" class="modal">
         <div class="modal-content">
             <h4 id="deleteModalTitle" style="margin-bottom: 15px;">ยืนยันการลบกล้อง</h4>
             <p id="deleteModalDesc" style="margin-bottom: 25px; font-size: 0.9em;"></p>
-            <input type="hidden" id="camNameToDelete"> 
+            <input type="hidden" id="camNameToDelete">
 
-            <button class="modal-button-confirm" style="background-color: var(--btn-danger); color: white; margin-bottom: 10px;" onclick="confirmDeletion()" id="btnConfirmDelete">
+            <button class="modal-button-confirm"
+                style="background-color: var(--btn-danger); color: white; margin-bottom: 10px;"
+                onclick="confirmDeletion()" id="btnConfirmDelete">
                 ลบกล้อง
             </button>
-            <button class="modal-button-confirm" style="background-color: var(--btn-cancel-bg); color: white;" onclick="closeDeleteConfirmModal()" id="btnCancelDelete">
+            <button class="modal-button-confirm" style="background-color: var(--btn-cancel-bg); color: white;"
+                onclick="closeDeleteConfirmModal()" id="btnCancelDelete">
                 ยกเลิก
             </button>
         </div>
@@ -272,46 +656,60 @@
 
     <script>
         // --- CONSTANTS ---
-        const CAM_LIST_KEY = 'koi_camera_list'; 
+        const CAM_LIST_KEY = 'koi_camera_list';
         const USER_DATA_KEY = 'koi_user_data';
         const LOGIN_KEY = 'isLoggedIn';
         const THEME_KEY = 'theme';
         const LANG_KEY = 'lang';
-        
+
         // --- CONTENT MAPS (TH/EN) ---
-        const langContent = { 
-            'th': { 
-                pageTitle: 'หน้าหลัก | Koi Monitor', screenTitle: 'รายการ IP Camera', camInfo: 'ฟรี 2 ตัว | สูงสุด 6 ตัว', btnAdd: '+ เพิ่มกล้อง', navHome: 'หน้าหลัก', navSettings: 'ตั้งค่า', 
+        const langContent = {
+            'th': {
+                pageTitle: 'หน้าหลัก | Koi Monitor', screenTitle: 'รายการ IP Camera', camInfo: 'ฟรี 2 ตัว | สูงสุด 6 ตัว', btnAdd: '+ เพิ่มกล้อง', navHome: 'หน้าหลัก', navSettings: 'ตั้งค่า',
                 deleteConfirm: 'คุณแน่ใจหรือไม่ว่าต้องการลบ {name} ออกจากระบบ?', alertSuccess: 'เพิ่มกล้องสำเร็จ! ({count} ตัว)', alertDeleted: 'ลบกล้อง {name} สำเร็จ', alertLimit: 'ถึงขีดจำกัด 2 กล้องฟรีแล้ว', btnDelete: 'ลบ',
                 modalTitle: 'เพิ่มกล้อง IP Camera', modalCamCountPrefix: 'คุณมีกล้องที่ใช้งานอยู่:', modalLoginPrompt: 'กรอกข้อมูลการเข้าสู่ระบบกล้อง', modalLoginButton: 'ยืนยันการเพิ่มกล้อง',
                 modalLimitReached: 'กล้องของคุณครบ 2 ตัวแล้ว!', modalUpgradePrompt: 'หากต้องการเพิ่มกล้องตัวที่ 3 - 6 กรุณาอัปเกรดเป็นแพ็กเกจ 6 กล้อง', alertUpgrade: 'เปิดหน้าซื้อแพ็กเกจ', alertMissingInput: 'กรุณากรอกข้อมูลให้ครบถ้วน',
-                videoModalTitle: 'วิดีโอสด: {name}', camNamePlaceholder: 'ชื่อกล้อง (เช่น บ่อ 1, กล้องหลัก)', btnEditCamera: 'แก้ไข', editFormTitle: 'แก้ไขการเชื่อมต่อ',
-                editLabelName: 'ชื่อกล้อง:', editLabelIp: 'IP Address / Host:', editLabelUser: 'Username:', editLabelPass: 'Password:', btnSaveCamChanges: 'บันทึกการแก้ไข', btnCancelEdit: 'ยกเลิก', btnDeleteInEdit: 'ลบกล้อง',
+                // แก้ไข: เพิ่ม * ใน Placeholder
+                videoModalTitle: 'วิดีโอสด: {name}', camNamePlaceholder: '* ชื่อกล้อง (เช่น บ่อ 1, กล้องหลัก)', btnEditCamera: 'แก้ไข', editFormTitle: 'แก้ไขการเชื่อมต่อ',
+                editLabelName: '* ชื่อกล้อง:', editLabelIp: '* IP Address / Host:', editLabelUser: '* Username:', editLabelPass: '* Password:', btnSaveCamChanges: 'บันทึกการแก้ไข', btnCancelEdit: 'ยกเลิก', btnDeleteInEdit: 'ลบกล้อง',
                 // Delete Modal Text
                 deleteModalTitle: 'ยืนยันการลบกล้อง',
                 btnConfirmDelete: 'ลบกล้อง',
                 btnCancelDelete: 'ยกเลิก',
                 // FIX: เพิ่มข้อความถ่ายทอดสด
                 videoMockDesc: 'กำลังถ่ายทอดสดจาก IP Camera...',
+                // NEW: ข้อความเมื่อไม่มีกล้อง
+                noCamMessage: 'ไม่มีกล้องเชื่อมต่อ',
+                // NEW: Placeholder สำหรับ Input ใน Add Modal
+                addInputIp: '* IP Address / Host',
+                addInputUser: '* Username',
+                addInputPass: '* Password'
             },
             'en': {
                 pageTitle: 'Home | Koi Monitor', screenTitle: 'IP Camera List', camInfo: 'Free 2 units | Max 6 units', btnAdd: '+ Add Camera', navHome: 'Home', navSettings: 'Settings',
                 deleteConfirm: 'Are you sure you want to remove {name}?', alertSuccess: 'Camera added successfully! ({count} units)', alertDeleted: 'Deleted camera {name}', alertLimit: 'Free 2 camera limit reached', btnDelete: 'Delete',
                 modalTitle: 'Add IP Camera', modalCamCountPrefix: 'You currently have:', modalLoginPrompt: 'Enter camera login details', modalLoginButton: 'Confirm Adding Camera',
-                modalLimitReached: 'Your camera limit of 2 is reached!', modalUpgradePrompt: 'To add cameras 3 - 6, please upgrade to the 6-camera package.', alertUpgrade: 'Open purchase package page', alertMissingInput: 'Please fill in all details.',
-                videoModalTitle: 'Live Video: {name}', camNamePlaceholder: 'Camera Name (e.g., Pond 1, Main Cam)', btnEditCamera: 'Edit', editFormTitle: 'Edit Connection',
-                editLabelName: 'Camera Name:', editLabelIp: 'IP Address / Host:', editLabelUser: 'Username:', editLabelPass: 'Password:', btnSaveCamChanges: 'Save Changes', btnCancelEdit: 'Cancel', btnDeleteInEdit: 'Delete Camera',
+                modalLimitReached: 'Your camera limit of 2 is reached!', modalUpgradePrompt: 'To add cameras 3 - 6, please upgrade to the 6-camera package.', alertUpgrade: 'Open purchase package page', alertMissingInput: 'Please fill in all fields.',
+                // แก้ไข: เพิ่ม * ใน Placeholder
+                videoModalTitle: 'Live Video: {name}', camNamePlaceholder: '* Camera Name (e.g., Pond 1, Main Cam)', btnEditCamera: 'Edit', editFormTitle: 'Edit Connection',
+                editLabelName: '* Camera Name:', editLabelIp: '* IP Address / Host:', editLabelUser: '* Username:', editLabelPass: '* Password:', btnSaveCamChanges: 'Save Changes', btnCancelEdit: 'Cancel', btnDeleteInEdit: 'Delete Camera',
                 // Delete Modal Text
                 deleteModalTitle: 'Confirm Camera Deletion',
                 btnConfirmDelete: 'Delete Camera',
                 btnCancelDelete: 'Cancel',
                 // FIX: เพิ่มข้อความถ่ายทอดสด
                 videoMockDesc: 'Live stream from IP Camera...',
+                // NEW: ข้อความเมื่อไม่มีกล้อง
+                noCamMessage: 'No cameras connected',
+                // NEW: Placeholder สำหรับ Input ใน Add Modal
+                addInputIp: '* IP Address / Host',
+                addInputUser: '* Username',
+                addInputPass: '* Password'
             }
         };
 
         function getLang() { return localStorage.getItem('lang') || 'th'; }
-        
+
         // --- Camera Data Management Functions ---
         function getCameraList() {
             try {
@@ -336,9 +734,9 @@
         function openVideoFeed(name) {
             const lang = getLang();
             const content = langContent[lang];
-            
+
             document.getElementById('videoModalTitle').textContent = content.videoModalTitle.replace('{name}', name);
-            
+
             // ตั้งค่าชื่อกล้องปัจจุบันใน hidden input
             document.getElementById('originalCamName').value = name;
 
@@ -348,10 +746,12 @@
             document.getElementById('btnEditCamera').style.display = 'block';
             document.getElementById('editCameraForm').style.display = 'none'; // Ensure form is hidden
 
+            // เปลี่ยน display เป็น flex เพื่อให้ Modal แสดง
             document.getElementById('videoFeedModal').style.display = 'flex';
         }
 
         function closeVideoFeedModal() {
+            // เปลี่ยน display กลับไปเป็น none เพื่อซ่อน Modal
             document.getElementById('videoFeedModal').style.display = 'none';
         }
 
@@ -373,17 +773,23 @@
             document.getElementById('editIpInput').value = camera.ip;
             document.getElementById('editUserInput').value = camera.user;
             document.getElementById('editPassInput').value = camera.pass; // Populate password field
-            
+
             // Toggle view within modal
             document.getElementById('videoFeedArea').style.display = 'none';
             document.getElementById('videoMockDesc').style.display = 'none';
             document.getElementById('btnEditCamera').style.display = 'none';
             document.getElementById('editCameraForm').style.display = 'block';
-            
+
             // Update button texts within the edit form
             document.getElementById('btnSaveCamChanges').textContent = content.btnSaveCamChanges;
             document.getElementById('btnDeleteCameraInEdit').textContent = content.btnDeleteInEdit;
             document.getElementById('editCameraForm').querySelector('[onclick="closeCameraEditForm()"]').textContent = content.btnCancelEdit;
+
+            // Update Labels (มี * แล้ว)
+            document.getElementById('editLabelName').textContent = content.editLabelName;
+            document.getElementById('editLabelIp').textContent = content.editLabelIp;
+            document.getElementById('editLabelUser').textContent = content.editLabelUser;
+            document.getElementById('editLabelPass').textContent = content.editLabelPass;
         }
 
         // NEW: ฟังก์ชัน Handler สำหรับการลบกล้อง (ถูกเรียกเมื่อกดปุ่ม Delete Camera ใน Edit Modal)
@@ -396,7 +802,7 @@
                 alert("Error: Cannot find camera name to delete.");
             }
         }
-        
+
         // NEW: Delete Confirmation Modal Functions
         function openDeleteConfirmModal(camName) {
             const lang = getLang();
@@ -405,15 +811,17 @@
             document.getElementById('deleteModalTitle').textContent = content.deleteModalTitle;
             document.getElementById('deleteModalDesc').textContent = content.deleteConfirm.replace('{name}', camName);
             document.getElementById('camNameToDelete').value = camName; // เก็บชื่อกล้องที่จะลบ
-            
+
             // อัปเดตข้อความปุ่มใน Modal
             document.getElementById('btnConfirmDelete').textContent = content.btnConfirmDelete;
             document.getElementById('btnCancelDelete').textContent = content.btnCancelDelete;
 
+            // เปลี่ยน display เป็น flex เพื่อให้ Modal แสดง
             document.getElementById('deleteConfirmModal').style.display = 'flex';
         }
 
         function closeDeleteConfirmModal() {
+            // เปลี่ยน display กลับไปเป็น none เพื่อซ่อน Modal
             document.getElementById('deleteConfirmModal').style.display = 'none';
         }
 
@@ -437,7 +845,7 @@
             e.preventDefault();
             const lang = getLang();
             const content = langContent[lang];
-            
+
             const originalName = document.getElementById('originalCamName').value;
             const newName = document.getElementById('editCamNameInput').value.trim();
             const newIp = document.getElementById('editIpInput').value.trim();
@@ -454,7 +862,7 @@
 
             // Check if the new name conflicts with another existing camera
             if (newName !== originalName && cameraList.some(cam => cam.name === newName)) {
-                 return;
+                return;
             }
 
             if (cameraIndex !== -1) {
@@ -466,10 +874,10 @@
 
                 saveCameraList(cameraList);
                 // Alert ถูกลบออกแล้ว
-                
+
                 // Update the hidden original name (for continuous editing)
                 document.getElementById('originalCamName').value = newName;
-                
+
                 // Update the video modal title and close form
                 document.getElementById('videoModalTitle').textContent = content.videoModalTitle.replace('{name}', newName);
                 closeCameraEditForm();
@@ -478,44 +886,44 @@
                 alert("Error: Camera not found during save.");
             }
         }
-        
+
         function addCameraMockup(e) {
-            e.preventDefault(); 
+            e.preventDefault();
 
             const cameraList = getCameraList();
             const camCount = cameraList.length;
             const lang = getLang();
             const content = langContent[lang];
-            
+
             const name = document.getElementById('camNameInput').value.trim();
             const ip = document.getElementById('ipInput').value.trim();
             const user = document.getElementById('userInput').value.trim();
             const pass = document.getElementById('passInput').value.trim();
 
             // Validation Check
-            if (!name || !ip || !user || !pass) { 
+            if (!name || !ip || !user || !pass) {
                 alert(content.alertMissingInput);
                 return;
             }
-            
+
             if (cameraList.some(cam => cam.name === name)) {
-                 return;
+                return;
             }
 
             if (camCount < 2) {
                 const newCamera = { name: name, ip: ip, user: user, pass: pass };
                 cameraList.push(newCamera);
                 saveCameraList(cameraList);
-                
-                updateView(); 
-                
+
+                updateView();
+
                 // Alert ถูกลบออกแล้ว
             } else {
                 // Alert Limit ถูกแทนที่ด้วย Modal UI แล้ว
             }
-            
-            closeAddCamModal(); 
-            localStorage.setItem('settingsUpdateTrigger', Date.now()); 
+
+            closeAddCamModal();
+            localStorage.setItem('settingsUpdateTrigger', Date.now());
         }
 
         // แก้ไข: นำ confirm() ออกจากฟังก์ชัน deleteCameraMockup
@@ -523,23 +931,23 @@
             let cameraList = getCameraList();
             const lang = getLang();
             const content = langContent[lang];
-            
+
             const initialLength = cameraList.length;
             // Filter out the camera to delete
             cameraList = cameraList.filter(cam => cam.name !== nameToDelete);
-            
+
             if (cameraList.length < initialLength) {
-                saveCameraList(cameraList); 
+                saveCameraList(cameraList);
                 // Alert ถูกลบออกแล้ว
                 closeVideoFeedModal(); // Close the video/edit modal after successful deletion
             } else {
                 alert("Error: Camera not found.");
             }
-            
+
             updateView(); // Re-render the main list
-            localStorage.setItem('settingsUpdateTrigger', Date.now()); 
+            localStorage.setItem('settingsUpdateTrigger', Date.now());
         }
-        
+
         // --- Modal/Add Logic (UI update) ---
         function updateModalText(content, lang, camCount) {
             document.getElementById('modalTitle').textContent = content.modalTitle;
@@ -547,15 +955,20 @@
             document.getElementById('modalLoginPrompt').textContent = content.modalLoginPrompt;
             document.getElementById('modalLimitReached').textContent = content.modalLimitReached;
             document.getElementById('modalUpgradePrompt').textContent = content.modalUpgradePrompt;
-            
+
             const upgradeButton = document.getElementById('modalLimitMessage').querySelector('.modal-button-confirm');
             if (upgradeButton) {
                 upgradeButton.textContent = (lang === 'th' ? 'ซื้อแพ็กเกจ 459 บาท/เดือน' : 'Buy Package 459 THB/month');
             }
-            
-            document.getElementById('modalLoginForm').querySelector('#btnConfirmAdd').textContent = content.modalLoginButton; 
+
+            document.getElementById('modalLoginForm').querySelector('#btnConfirmAdd').textContent = content.modalLoginButton;
+
+            // FIX: อัปเดต Placeholder ใน Add Modal ให้มี *
             document.getElementById('camNameInput').placeholder = content.camNamePlaceholder;
-            
+            document.getElementById('ipInput').placeholder = content.addInputIp;
+            document.getElementById('userInput').placeholder = content.addInputUser;
+            document.getElementById('passInput').placeholder = content.addInputPass;
+
             // Display list in limit message
             const listContainer = document.getElementById('modalLimitCameraList');
             const cameraList = getCameraList();
@@ -577,7 +990,7 @@
             const camCount = cameraList.length;
             const lang = getLang();
             const content = langContent[lang];
-            
+
             updateModalText(content, lang, camCount);
 
             if (camCount >= 2) {
@@ -587,19 +1000,21 @@
                 document.getElementById('modalLoginForm').style.display = 'block';
                 document.getElementById('modalLimitMessage').style.display = 'none';
                 // Clear inputs
-                document.getElementById('camNameInput').value = ''; 
+                document.getElementById('camNameInput').value = '';
                 document.getElementById('ipInput').value = '';
                 document.getElementById('userInput').value = '';
                 document.getElementById('passInput').value = '';
             }
 
+            // เปลี่ยน display เป็น flex เพื่อให้ Modal แสดง
             modal.style.display = 'flex';
         }
 
         function closeAddCamModal() {
+            // เปลี่ยน display กลับไปเป็น none เพื่อซ่อน Modal
             document.getElementById('addCamModal').style.display = 'none';
         }
-        
+
         // --- UI Rendering Logic ---
         function updateText(lang) {
             const content = langContent[lang];
@@ -607,78 +1022,105 @@
             document.getElementById('screen-title').textContent = content.screenTitle;
             document.getElementById('cam-info').textContent = content.camInfo;
             document.getElementById('btnAddCamera').textContent = content.btnAdd;
-            
+
             document.getElementById('nav-home').querySelector('.label').textContent = content.navHome;
             document.getElementById('nav-settings').querySelector('.label').textContent = content.navSettings;
-            
+
             document.getElementById('lang-toggle-button').textContent = lang.toUpperCase() === 'TH' ? 'EN' : 'TH';
 
             // Video/Edit Modal text
             document.getElementById('btnEditCamera').textContent = content.btnEditCamera;
             document.getElementById('editFormTitle').textContent = content.editFormTitle;
-            
-            // Update Edit Form Labels and Buttons
+
+            // Update Edit Form Labels and Buttons (อัปเดต Label ให้มี *)
             document.getElementById('editLabelName').textContent = content.editLabelName;
             document.getElementById('editLabelIp').textContent = content.editLabelIp;
             document.getElementById('editLabelUser').textContent = content.editLabelUser;
             document.getElementById('editLabelPass').textContent = content.editLabelPass;
-            
+
             const btnSave = document.getElementById('btnSaveCamChanges');
             if (btnSave) btnSave.textContent = content.btnSaveCamChanges;
 
             const btnCancel = document.getElementById('editCameraForm').querySelector('[onclick="closeCameraEditForm()"]');
             if (btnCancel) btnCancel.textContent = content.btnCancelEdit;
-            
+
             const btnDelete = document.getElementById('btnDeleteCameraInEdit');
             if (btnDelete) btnDelete.textContent = content.btnDeleteInEdit;
-            
+
             // NEW: Update Delete Modal Text
             const deleteModalTitle = document.getElementById('deleteModalTitle');
-            if(deleteModalTitle) deleteModalTitle.textContent = content.deleteModalTitle;
-            
+            if (deleteModalTitle) deleteModalTitle.textContent = content.deleteModalTitle;
+
             const btnConfirmDelete = document.getElementById('btnConfirmDelete');
-            if(btnConfirmDelete) btnConfirmDelete.textContent = content.btnConfirmDelete;
+            if (btnConfirmDelete) btnConfirmDelete.textContent = content.btnConfirmDelete;
 
             const btnCancelDelete = document.getElementById('btnCancelDelete');
-            if(btnCancelDelete) btnCancelDelete.textContent = content.btnCancelDelete;
-            
+            if (btnCancelDelete) btnCancelDelete.textContent = content.btnCancelDelete;
+
             // FIX: อัปเดตข้อความ Video Mockup
             const videoMockDesc = document.getElementById('videoMockDesc');
-            if(videoMockDesc) videoMockDesc.textContent = content.videoMockDesc;
+            if (videoMockDesc) videoMockDesc.textContent = content.videoMockDesc;
 
-
+            // FIX: เรียก updateModalText เพื่ออัปเดต Placeholder ของ Add Modal ด้วย
             updateModalText(content, lang, getCameraList().length);
         }
 
         function renderCameraList() {
             const container = document.getElementById('camera-list-container');
-            const cameraList = getCameraList(); 
+            const cameraList = getCameraList();
             const camCount = cameraList.length;
             const lang = getLang();
             const content = langContent[lang];
-            container.innerHTML = ''; 
-            
+            container.innerHTML = '';
+
             if (camCount === 0) {
-                container.innerHTML = `<p style="color:#999; padding: 30px; border:1px dashed #ccc; border-radius:8px;">${lang === 'th' ? 'ไม่มีกล้องเชื่อมต่อ' : 'No cameras connected'}</p>`;
+                // ไม่มีกล้อง: ไม่ต้องแสดงอะไรนอกจากปุ่ม Add
                 document.getElementById('cam-info').textContent = content.camInfo;
                 document.getElementById('btnAddCamera').disabled = false;
                 return;
             }
 
-            cameraList.forEach(camera => { 
-                const camName = camera.name; 
-                
+            // --- SVG ICON CODE (Outline Camera - FINAL ADJUSTMENT) ---
+            const cameraSvg = `
+                <div class="cam-icon-wrapper">
+                    <svg viewBox="0 0 30 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5">
+                        <rect x="2" y="7" width="26" height="15" rx="3" ry="3"/>
+                        <circle cx="15" cy="14.5" r="4.5" stroke="currentColor"/>
+                        <path d="M10 7L11 4h8l1 3" stroke="currentColor"/>
+                        <circle cx="6" cy="9.5" r="1" stroke="currentColor"/>
+                    </svg>
+                </div>
+            `;
+            // --- END SVG ICON CODE ---
+
+            cameraList.forEach(camera => {
+                const camName = camera.name;
+
                 const cardDiv = document.createElement('div');
                 cardDiv.className = 'camera-list-item';
                 cardDiv.addEventListener('click', () => openVideoFeed(camName));
-                
+
                 const nameSpan = document.createElement('span');
-                nameSpan.textContent = camName;
-                
+                // **FIX: ใช้ SVG icon นำหน้าชื่อกล้อง**
+                nameSpan.innerHTML = cameraSvg + camName;
+
+                const deleteIcon = document.createElement('span');
+                deleteIcon.textContent = '❌'; // ใช้ไอคอน X ง่ายๆ
+                deleteIcon.style.color = 'var(--btn-danger)';
+                deleteIcon.style.cursor = 'pointer';
+                deleteIcon.style.paddingLeft = '15px';
+
+                // ป้องกันไม่ให้คลิกปุ่มลบไปเปิด Video Feed
+                deleteIcon.addEventListener('click', (e) => {
+                    e.stopPropagation(); // หยุดการส่ง event ไปยัง Card
+                    openDeleteConfirmModal(camName);
+                });
+
                 cardDiv.appendChild(nameSpan);
+                cardDiv.appendChild(deleteIcon); // เพิ่มปุ่มลบ
                 container.appendChild(cardDiv);
             });
-            
+
             if (camCount >= 2) {
                 document.getElementById('cam-info').textContent = content.alertLimit;
                 document.getElementById('btnAddCamera').disabled = true;
@@ -687,24 +1129,24 @@
                 document.getElementById('btnAddCamera').disabled = false;
             }
         }
-        
+
         // --- Theme/Language/Initial Functions ---
         const themeToggle = document.getElementById('theme-toggle-checkbox');
 
-        themeToggle.addEventListener("change", function() {
+        themeToggle.addEventListener("change", function () {
             document.body.classList.toggle("dark-theme", this.checked);
             localStorage.setItem("theme", this.checked ? "dark" : "light");
             // FIX: ต้องเรียก updateView() เพื่อโหลดภาษาและรีเรนเดอร์รายการกล้อง/modal
             updateView();
-            localStorage.setItem('settingsUpdateTrigger', Date.now()); 
+            localStorage.setItem('settingsUpdateTrigger', Date.now());
         });
 
         function toggleLanguage() {
             let newLang = (getLang() === 'th') ? 'en' : 'th';
             localStorage.setItem('lang', newLang);
             // FIX: ต้องเรียก updateView() เพื่อโหลดภาษาและรีเรนเดอร์รายการกล้อง/modal
-            updateView(); 
-            localStorage.setItem('settingsUpdateTrigger', Date.now()); 
+            updateView();
+            localStorage.setItem('settingsUpdateTrigger', Date.now());
         }
 
         function applyThemeAndLangOnLoad() {
@@ -727,49 +1169,50 @@
         // --- INITIALIZATION ---
         document.addEventListener('DOMContentLoaded', () => {
             if (localStorage.getItem('isLoggedIn') !== 'true') {
-                 // Redirect if not logged in
-                 window.location.href = 'index.html?v=' + Date.now(); 
-                 return;
+                // Redirect if not logged in
+                window.location.href = 'index.html?v=' + Date.now(); // *** แก้ไข: ชี้ไปที่ index.html ***
+                return;
             }
             // Cleanup obsolete mock counter
-            localStorage.removeItem('camCount'); 
+            localStorage.removeItem('camCount');
 
             if (!localStorage.getItem(CAM_LIST_KEY)) {
                 saveCameraList([]);
             }
-            
+
             updateView();
-            
+
             // Close modals when clicking outside
-            window.onclick = function(event) {
-                if (event.target == document.getElementById('addCamModal')) {
+            window.onclick = function (event) {
+                // เช็คว่า Modal ไหนที่ถูกคลิก และซ่อนมันถ้าถูกคลิกนอก .modal-content
+                if (event.target === document.getElementById('addCamModal')) {
                     closeAddCamModal();
                 }
-                if (event.target == document.getElementById('videoFeedModal')) {
+                if (event.target === document.getElementById('videoFeedModal')) {
                     // Only close video modal if the user is not in the edit form
                     if (document.getElementById('editCameraForm').style.display !== 'block') {
                         closeVideoFeedModal();
                     }
                 }
-                // NEW: Close delete confirm modal when clicking outside
-                if (event.target == document.getElementById('deleteConfirmModal')) {
+                if (event.target === document.getElementById('deleteConfirmModal')) {
                     closeDeleteConfirmModal();
                 }
             }
-            
+
             // Attach FORM submit listener to call addCameraMockup with event
             document.getElementById('addCameraForm').addEventListener('submit', addCameraMockup);
 
             // Final Fix: ผูก Event Listener สำหรับปุ่มลบเพียงครั้งเดียวกับฟังก์ชัน handleDeleteClick
             document.getElementById('btnDeleteCameraInEdit').addEventListener('click', handleDeleteClick);
         });
-        
+
         // FIX: Listen for changes from other pages (e.g., settings page changing theme/language)
         window.addEventListener('storage', (event) => {
-            if (event.key === 'lang' || event.key === CAM_LIST_KEY || event.key === 'settingsUpdateTrigger' || event.key === 'theme') { 
+            if (event.key === 'lang' || event.key === CAM_LIST_KEY || event.key === 'settingsUpdateTrigger' || event.key === 'theme') {
                 updateView();
             }
         });
     </script>
 </body>
+
 </html>

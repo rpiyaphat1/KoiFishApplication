@@ -1,70 +1,341 @@
 <!DOCTYPE html>
 <html lang="th">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title id="page-title">เข้าสู่ระบบ | Koi Health Monitor</title>
     <style>
         /* Base and Theme CSS */
-        :root { --background-color: #ffffff; --text-color: #000000; --input-bg-color: #ffffff; --input-border-color: #ccc; --login-button-bg: #343a40; --login-button-text: #ffffff; --link-color: #007bff; }
-        body.dark-theme { --background-color: #121212; --text-color: #e0e0e0; --input-bg-color: #1e1e1e; --input-border-color: #333; --login-button-bg: #e0e0e0; --login-button-text: #121212; --link-color: #4da6ff; }
-        /* Global Styles */
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: var(--background-color); color: var(--text-color); margin: 0; padding: 0; display: flex; justify-content: center; align-items: center; min-height: 100vh; transition: background-color 0.3s, color 0.3s; }
-        .auth-container { width: 100%; max-width: 400px; padding: 40px 20px; text-align: center; position: relative; }
-        
-        /* Fixed Position Elements */
-        .theme-toggle { position: absolute; top: 30px; left: 30px; }
-        .lang-toggle-button { position: absolute; top: 30px; right: 30px; padding: 8px 12px; background-color: #f0f0f0; color: #343a40; border: 1px solid #ccc; border-radius: 5px; cursor: pointer; font-weight: bold; transition: background-color 0.3s; text-transform: uppercase; z-index: 10; } 
-        .dark-theme .lang-toggle-button { background-color: #333; color: #f0f0f0; border-color: #555; }
-        
-        /* Logo (Fixed Position) */
-        .logo-fixed { position: absolute; top: 10px; left: 50%; transform: translateX(-50%); z-index: 10; }
-        .logo-fixed img { width: 200px; filter: drop-shadow(0 0 5px rgba(0, 0, 0, 0.1)); } 
-
-        /* Form Layout */
-        #login-form { margin-top: 240px; z-index: 5; position: relative; } 
-        .input-group { margin-bottom: 25px; }
-        .input-group label { display: block; font-weight: bold; text-transform: none; margin-bottom: 10px; letter-spacing: 1px; font-size: 1.1em; }
-        .input-group input { width: 100%; padding: 10px; border: 2px solid var(--input-border-color); background-color: var(--input-bg-color); border-radius: 5px; box-sizing: border-box; color: var(--text-color); font-size: 1.1em; text-align: center; }
-        
-        /* Links */
-        .links a { text-decoration: none; color: var(--link-color); font-weight: bold; margin: 0 5px; text-transform: none; font-size: 0.9em; cursor: pointer; }
-        .links { margin-top: 20px; margin-bottom: 30px; }
-        
-        /* Buttons */
-        .auth-button { width: 100%; padding: 12px; border: none; border-radius: 8px; font-size: 1.2em; font-weight: bold; cursor: pointer; transition: background-color 0.3s, color 0.3s, opacity 0.2s, transform 0.1s; }
-        .login-button { background-color: var(--login-button-bg); color: var(--login-button-text); }
-        
-        /* Helpers */
-        .hidden { display: none !important; }
-        
-        /* Theme Toggle Switch styles */
-        .toggle-switch { position: relative; display: inline-block; width: 50px; height: 25px; }
-        .toggle-switch input { opacity: 0; width: 0; height: 0; }
-        .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #ffc107; transition: .4s; border-radius: 25px; }
-        .slider:before { position: absolute; content: ""; height: 17px; width: 17px; left: 4px; bottom: 4px; background-color: white; transition: .4s; border-radius: 50%; }
-        input:checked + .slider { background-color: #2c3e50; }
-        input:checked + .slider:before { transform: translateX(25px); }
-        
-        /* Error Message Style */
-        .error-message {
-            color: #dc3545; 
-            font-weight: bold;
-            margin-top: -15px; 
-            margin-bottom: 25px; 
-            text-align: center;
+        :root {
+            --background-color: #ffffff;
+            --text-color: #000000;
+            --input-bg-color: #ffffff;
+            --input-border-color: #ccc;
+            --login-button-text: #ffffff;
+            --link-color: #007bff;
+            --login-gradient: linear-gradient(to right, #4facfe 0%, #00f2fe 100%);
+            --social-f-color: #3b5998;
+            --social-g-color: #dd4b39;
         }
 
-        /* Hover/Active Effects */
-        .login-button:hover { opacity: 0.9; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); }
-        .login-button:active { background-color: #6c757d; transform: translateY(1px); }
-        body.dark-theme .login-button:active { background-color: #999; color: #121212; }
+        body.dark-theme {
+            --background-color: #121212;
+            --text-color: #e0e0e0;
+            --input-bg-color: #1e1e1e;
+            --input-border-color: #333;
+            --login-button-text: #121212;
+            --link-color: #4da6ff;
+            --login-gradient: linear-gradient(to right, #6a85b6 0%, #bac8e0 100%);
+            --social-f-color: #6a85b6;
+            --social-g-color: #ef4444;
+        }
 
+        /* Global Styles */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .auth-container {
+            width: 100%;
+            max-width: 400px;
+            padding: 40px 20px;
+            text-align: center;
+            position: relative;
+        }
+
+        /* Fixed Position Elements */
+        .theme-toggle {
+            position: absolute;
+            top: 30px;
+            left: 30px;
+        }
+
+        .lang-toggle-button {
+            position: absolute;
+            top: 30px;
+            right: 30px;
+            padding: 8px 12px;
+            background-color: #f0f0f0;
+            color: #343a40;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background-color 0.3s;
+            text-transform: uppercase;
+            z-index: 10;
+        }
+
+        .dark-theme .lang-toggle-button {
+            background-color: #333;
+            color: #f0f0f0;
+            border-color: #555;
+        }
+
+        /* Logo (Fixed Position) - ถูกซ่อนแล้ว */
+        .logo-fixed {
+            display: none;
+        }
+
+        /* Top Logo Style */
+        .logo-top {
+            margin-bottom: 20px;
+        }
+
+        .logo-top img {
+            width: 200px;
+            filter: drop-shadow(0 0 5px rgba(0, 0, 0, 0.1));
+        }
+
+        /* NEW: Title */
+        #main-title {
+            font-size: 2.2em;
+            font-weight: 700;
+            margin-bottom: 30px;
+            margin-top: 10px;
+        }
+
+        /* Form Layout */
+        #login-form {
+            margin-top: 0;
+            z-index: 5;
+            position: relative;
+        }
+
+        .input-group {
+            margin-bottom: 25px;
+        }
+
+        .input-group label {
+            display: block;
+            font-weight: bold;
+            text-transform: none;
+            margin-bottom: 10px;
+            letter-spacing: 1px;
+            font-size: 1.1em;
+            text-align: left;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 10px;
+            border: none;
+            border-bottom: 2px solid var(--input-border-color);
+            background-color: transparent;
+            border-radius: 0;
+            box-sizing: border-box;
+            color: var(--text-color);
+            font-size: 1.1em;
+            text-align: left;
+        }
+
+        /* Links: ลืมรหัสผ่านชิดขวา, ลงทะเบียนอยู่ด้านล่าง */
+        .links {
+            display: flex;
+            justify-content: flex-end;
+            margin-top: -15px;
+            margin-bottom: 30px;
+        }
+
+        .links a {
+            text-decoration: none;
+            color: var(--link-color);
+            font-weight: bold;
+            margin: 0;
+            text-transform: none;
+            font-size: 0.9em;
+            cursor: pointer;
+        }
+
+        /* Buttons */
+        .auth-button {
+            width: 100%;
+            padding: 15px;
+            border: none;
+            border-radius: 25px;
+            font-size: 1.2em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: opacity 0.2s, transform 0.1s;
+        }
+
+        /* Gradient/Vibrant Login Button Style */
+        .login-button {
+            background-image: var(--login-gradient);
+            /* ใช้ Variable */
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            font-weight: normal;
+            color: var(--login-button-text);
+            /* ใช้ Variable */
+        }
+
+        /* Google Login Button (ถูกลบออก) */
+        .google-login-button {
+            display: none;
+        }
+
+        /* Social Icons Mockup (Facebook, Twitter, Google) */
+        .social-login-icons {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 20px;
+            /* ลด margin-bottom */
+            margin-top: 15px;
+            /* ลด margin-top */
+        }
+
+        .social-icon {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            background-color: #f0f0f0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            font-weight: bold;
+            color: white;
+            cursor: pointer;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            transition: background-color 0.3s;
+            /* เพิ่ม transition */
+        }
+
+        /* Mock Colors for Social Icons (ใช้ Variable) */
+        #icon-facebook {
+            background-color: var(--social-f-color);
+        }
+
+        #icon-twitter {
+            background-color: #00aced;
+            display: none;
+        }
+
+        /* ถูกซ่อนตามคำขอ */
+        #icon-google {
+            background-color: var(--social-g-color);
+        }
+
+        /* Social Login Prompt */
+        #social-prompt {
+            font-size: 0.95em;
+            margin-bottom: 10px;
+            /* ระยะห่างระหว่างข้อความกับไอคอน */
+            opacity: 0.7;
+        }
+
+        /* Sign Up Text at the bottom (NEW STYLE) */
+        .sign-up-bottom {
+            margin-top: 40px;
+            font-size: 0.9em;
+            display: flex;
+            /* จัดให้อยู่ในบรรทัดเดียวกัน */
+            justify-content: center;
+            gap: 5px;
+        }
+
+        .sign-up-bottom p {
+            margin: 0;
+            display: inline;
+        }
+
+        .sign-up-bottom a {
+            text-decoration: none;
+            color: var(--link-color);
+            font-weight: bold;
+            text-transform: none;
+            /* ยกเลิก uppercase */
+            cursor: pointer;
+        }
+
+        /* Helpers */
+        .hidden {
+            display: none !important;
+        }
+
+        /* Theme Toggle Switch styles (ไอคอนพระอาทิตย์/พระจันทร์) */
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 50px;
+            height: 25px;
+        }
+
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ffc107;
+            transition: .4s;
+            border-radius: 25px;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 17px;
+            width: 17px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            content: "\2600";
+            font-size: 16px;
+            color: #ffc107;
+            text-shadow: 0 0 2px rgba(0, 0, 0, 0.2);
+        }
+
+        input:checked+.slider {
+            background-color: #2c3e50;
+        }
+
+        input:checked+.slider:before {
+            transform: translateX(25px);
+            background-color: #2c3e50;
+            color: white;
+            content: "\1F319";
+            font-size: 14px;
+            text-shadow: none;
+        }
+
+        /* Error Message Style */
+        .error-message {
+            color: #dc3545;
+            font-weight: bold;
+            margin-top: -15px;
+            margin-bottom: 25px;
+            text-align: center;
+        }
     </style>
 </head>
+
 <body>
     <div class="auth-container">
-        
+
         <div class="theme-toggle">
             <label class="toggle-switch">
                 <input type="checkbox" id="theme-toggle-checkbox">
@@ -75,23 +346,28 @@
             EN
         </button>
         <div class="logo-fixed">
-            <img src="LogoKoi.png" alt="Logo"> 
+            <img src="LogoKoi.png" alt="Logo">
         </div>
 
+        <div class="logo-top">
+            <img src="LogoKoi.png" alt="Koi Monitor Logo">
+        </div>
+
+        <h1 id="main-title">Login</h1>
+
         <form id="login-form" onsubmit="handleLogin(event)">
-            
+
             <div id="username-group" class="input-group">
                 <label for="username-input" id="label-username">ชื่อผู้ใช้</label>
-                <input type="text" id="username-input" name="username" required>
+                <input type="text" id="username-input" name="username" required placeholder="Type your username">
             </div>
-            
+
             <div id="password-group" class="input-group">
                 <label for="password-input" id="label-password">รหัสผ่าน</label>
-                <input type="password" id="password-input" name="password" required>
+                <input type="password" id="password-input" name="password" required placeholder="Type your password">
             </div>
-            
+
             <div class="links">
-                <a href="register.html" id="link-register">ลงทะเบียน</a>
                 <a href="forget.html" id="link-forgot">ลืมรหัสผ่าน</a>
             </div>
 
@@ -100,47 +376,82 @@
             </p>
 
             <button type="submit" class="auth-button login-button" id="btn-submit">เข้าสู่ระบบ</button>
+
         </form>
+
+        <p id="social-prompt">Or login with</p>
+
+        <div class="social-login-icons">
+            <div class="social-icon" id="icon-facebook" onclick="handleSocialLogin('Facebook')">f</div>
+
+            <div class="social-icon" id="icon-google" onclick="handleGmailLogin()">G</div>
+
+            <div class="social-icon" id="icon-twitter" onclick="handleSocialLogin('Twitter')" style="display:none;">t
+            </div>
+        </div>
+
+        <div class="sign-up-bottom">
+            <p id="label-not-member">Not a member?</p>
+            <a href="register.html" id="link-register">Sign up now</a>
+        </div>
+
 
     </div>
 
     <script>
         // --- CONTENT MAPS ---
-        
+
         const langContent = {
             'th': {
                 pageTitle: 'เข้าสู่ระบบ | Koi Health Monitor',
-                username: 'ชื่อผู้ใช้', password: 'รหัสผ่าน',
-                linkRegister: 'ลงทะเบียน', linkForgot: 'ลืมรหัสผ่าน',
+                mainTitle: 'เข้าสู่ระบบ',
+                username: 'ชื่อผู้ใช้',
+                usernamePlaceholder: 'กรอกชื่อผู้ใช้ของคุณ',
+                password: 'รหัสผ่าน',
+                passwordPlaceholder: 'กรอกรหัสผ่านของคุณ',
+                linkForgot: 'ลืมรหัสผ่าน?',
                 btnLogin: 'เข้าสู่ระบบ',
                 currentLangBtn: 'EN',
-                errorMessage: 'ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง' 
+                errorMessage: 'ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง',
+                socialPrompt: 'หรือเข้าสู่ระบบด้วย',
+                labelNotMember: 'ยังไม่เป็นสมาชิก?',
+                linkRegister: 'ลงทะเบียนเลย',
+                alertSocial: 'จำลอง: เข้าสู่ระบบด้วย {social} สำเร็จ!'
             },
             'en': {
                 pageTitle: 'Login | Koi Health Monitor',
-                username: 'USERNAME', password: 'PASSWORD',
-                linkRegister: 'REGISTER', linkForgot: 'FORGET PASSWORD',
+                mainTitle: 'Login',
+                username: 'USERNAME',
+                usernamePlaceholder: 'Type your username',
+                password: 'PASSWORD',
+                passwordPlaceholder: 'Type your password',
+                linkForgot: 'Forgot password?',
                 btnLogin: 'LOGIN',
                 currentLangBtn: 'TH',
-                errorMessage: 'Incorrect username or password'
+                errorMessage: 'Incorrect username or password',
+                socialPrompt: 'Or login with',
+                labelNotMember: 'Not a member?',
+                linkRegister: 'Sign up now',
+                alertSocial: 'Mock: Signed in with {social} successfully!'
             }
         };
 
         // --- CORE FUNCTIONS ---
 
         function getLang() { return localStorage.getItem('lang') || 'th'; }
-        
+
         function toggleLanguage() {
             document.getElementById('error-message').classList.add('hidden');
             let newLang = (getLang() === 'th') ? 'en' : 'th';
             localStorage.setItem('lang', newLang);
-            updateText(newLang);
+            applyThemeAndLangOnLoad();
         }
-        
+
         function applyThemeAndLangOnLoad() {
             // Load Theme
             const themeToggle = document.getElementById('theme-toggle-checkbox');
             const savedTheme = localStorage.getItem('theme') || 'light';
+
             if (savedTheme === 'dark') {
                 document.body.classList.add('dark-theme');
                 themeToggle.checked = true;
@@ -148,6 +459,7 @@
                 document.body.classList.remove('dark-theme');
                 themeToggle.checked = false;
             }
+
             // Load Language
             updateText(getLang());
         }
@@ -155,74 +467,105 @@
 
         function updateText(lang) {
             const content = langContent[lang];
-            
+
             document.getElementById('page-title').textContent = content.pageTitle;
+            document.getElementById('main-title').textContent = content.mainTitle;
+
             document.getElementById('label-username').textContent = content.username;
             document.getElementById('label-password').textContent = content.password;
+
+            // อัปเดต Placeholder
+            document.getElementById('username-input').placeholder = content.usernamePlaceholder;
+            document.getElementById('password-input').placeholder = content.passwordPlaceholder;
+
             document.getElementById('btn-submit').textContent = content.btnLogin;
             document.getElementById('lang-toggle-button').textContent = content.currentLangBtn;
-            document.getElementById('error-message').textContent = content.errorMessage; 
+            document.getElementById('error-message').textContent = content.errorMessage;
 
-            // อัปเดตข้อความลิงก์
-            document.getElementById('link-register').textContent = content.linkRegister;
+            // อัปเดตข้อความ Link/Prompt
             document.getElementById('link-forgot').textContent = content.linkForgot;
+            document.getElementById('social-prompt').textContent = content.socialPrompt;
+            document.getElementById('label-not-member').textContent = content.labelNotMember;
+            document.getElementById('link-register').textContent = content.linkRegister;
         }
 
-        // --- THEME TOGGLE ---
+        // --- THEME TOGGLE LISTENER ---
         const themeToggle = document.getElementById('theme-toggle-checkbox');
-        themeToggle.addEventListener("change", function() {
+
+        themeToggle.addEventListener("change", function () {
             document.body.classList.toggle("dark-theme", this.checked);
             localStorage.setItem("theme", this.checked ? "dark" : "light");
-            // FIX: เมื่อเปลี่ยนธีม ต้องโหลดข้อความภาษาใหม่ด้วย
-            updateText(getLang()); 
+            updateText(getLang());
         });
 
-        // --- LOGIN HANDLER ---
+
+        // --- LOGIN HANDLER (Username/Password Mock) ---
         function handleLogin(e) {
             e.preventDefault();
             const lang = getLang();
             const errorMessageElement = document.getElementById('error-message');
             const content = langContent[lang];
-            
-            errorMessageElement.classList.add('hidden'); 
+
+            errorMessageElement.classList.add('hidden');
 
             const username = document.getElementById('username-input').value.trim();
             const password = document.getElementById('password-input').value.trim();
-            
+
             // เงื่อนไข Login: Username 'a' (case-insensitive) และ Password '1'
             if (username.toLowerCase() === 'a' && password === '1') {
                 // Login สำเร็จ
                 localStorage.setItem('isLoggedIn', 'true');
-                localStorage.removeItem('camCount'); 
-                
-                // Alert "สวัสดี" ถูกลบออกแล้ว
-                
+                localStorage.removeItem('camCount');
+
                 // นำทางที่เสถียรไปยัง main.html
-                window.location.href = 'main.html?v=' + Date.now(); 
+                window.location.href = 'main.html?v=' + Date.now();
 
             } else {
                 // Login ล้มเหลว: แสดงข้อความ error สีแดง
-                errorMessageElement.textContent = content.errorMessage; 
-                errorMessageElement.classList.remove('hidden'); 
-                document.getElementById('password-input').value = ''; 
+                errorMessageElement.textContent = content.errorMessage;
+                errorMessageElement.classList.remove('hidden');
+                document.getElementById('password-input').value = '';
             }
         }
+
+        // --- GMAIL LOGIN HANDLER (Mock Function) - ผูกกับปุ่ม Google (G) ---
+        function handleGmailLogin() {
+            handleSocialLogin('Google');
+        }
+
+        // --- SOCIAL LOGIN HANDLER (Mock Function) ---
+        function handleSocialLogin(social) {
+            const lang = getLang();
+            const content = langContent[lang];
+
+            // Mocking the successful sign-in process
+            alert(content.alertSocial.replace('{social}', social));
+
+            // Login สำเร็จ
+            localStorage.setItem('isLoggedIn', 'true');
+            localStorage.removeItem('camCount');
+
+            // นำทางไปยัง main.html
+            window.location.href = 'main.html?v=' + Date.now();
+        }
+
 
         // --- INITIALIZATION ---
         document.addEventListener('DOMContentLoaded', () => {
             applyThemeAndLangOnLoad();
-            document.getElementById('error-message').classList.add('hidden'); 
-            
+            document.getElementById('error-message').classList.add('hidden');
+
             // Attach Event Listener to form
             document.getElementById('login-form').addEventListener('submit', handleLogin);
         });
-        
+
         // FIX: ฟังการเปลี่ยนแปลงภาษา/ธีมจากหน้าอื่น (Storage Event)
         window.addEventListener('storage', (event) => {
-            if (event.key === 'lang' || event.key === 'theme') { 
+            if (event.key === 'lang' || event.key === 'theme') {
                 applyThemeAndLangOnLoad();
             }
         });
     </script>
 </body>
+
 </html>
