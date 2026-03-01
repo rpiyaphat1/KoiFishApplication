@@ -1,10 +1,11 @@
 'use client'
-// บังคับให้หน้านี้เป็น Dynamic และไม่ทำ Static Build
+
+// บังคับให้หน้านี้เป็น Dynamic และไม่ทำ Static Build เพื่อป้องกัน Error ตอน Deploy
 export const dynamic = 'force-dynamic'
 
 import React, { useState, useEffect, Suspense } from 'react'
 import { supabase } from '../lib/supabase'
-import { Mail, Lock, ArrowRight, ShieldCheck, AlertCircle, ArrowLeft, Hash, RefreshCcw, Eye, EyeOff, CheckCircle2 } from 'lucide-react'
+import { Mail, Lock, ArrowRight, ShieldCheck, ArrowLeft, Hash, Eye, EyeOff, CheckCircle2 } from 'lucide-react'
 import { useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 
@@ -24,7 +25,7 @@ function ResetForm() {
     const [cooldown, setCooldown] = useState(0)
 
     useEffect(() => {
-        // ดึง Email จาก URL ถ้ามี
+        // ดึง Email จาก URL ถ้ามี (กรณีมาจากลิงก์ในอีเมล)
         const emailFromUrl = searchParams.get('email')
         if (emailFromUrl) {
             setEmail(emailFromUrl)
@@ -144,15 +145,13 @@ function ResetForm() {
     )
 }
 
-// --- 2. Main Page ที่หุ้มด้วย Suspense ---
+// --- 2. Main Page ---
 export default function ResetPasswordPage() {
     return (
         <div className="min-h-screen bg-[#020617] text-slate-100 font-sans flex flex-col relative overflow-hidden selection:bg-cyan-500/30">
-            <Link href="/login" className="absolute top-8 left-8 z-50 flex items-center gap-2 text-slate-500 hover:text-white font-black uppercase italic text-sm transition-all hover:scale-110 active:scale-95">
-                <ArrowLeft size={20} className="text-cyan-400" /> BACK
-            </Link>
 
             <main className="flex-1 flex flex-col lg:flex-row min-h-screen">
+                {/* ฝั่งซ้าย: รูปภาพและโลโก้ (แสดงเฉพาะ Desktop) */}
                 <div className="hidden lg:flex lg:w-1/2 relative items-center justify-center bg-black border-r border-white/5">
                     <img src="/koibg1.png" className="absolute inset-0 w-full h-full object-cover blur-[10px] brightness-[0.25]" alt="BG" />
                     <div className="relative z-20 text-center">
@@ -161,14 +160,27 @@ export default function ResetPasswordPage() {
                     </div>
                 </div>
 
+                {/* ฝั่งขวา: ส่วนของเนื้อหาและแบบฟอร์ม */}
                 <div className="flex-1 flex flex-col justify-center items-center p-6 md:p-8 bg-[#020617] relative z-10">
-                    <div className="w-full max-w-[400px] space-y-10">
-                        <h2 className="text-5xl font-black text-white italic uppercase leading-none tracking-tighter">Reset Password</h2>
+                    <div className="w-full max-w-[400px] space-y-6">
 
-                        {/* 🔥 หุ้ม Suspense ตรงนี้เพื่อให้ Build ผ่าน */}
-                        <Suspense fallback={<div className="text-cyan-500 font-black italic animate-pulse">LOADING FORM...</div>}>
-                            <ResetForm />
-                        </Suspense>
+                        {/* ✅ ปุ่ม BACK ย้ายมาอยู่เหนือหัวข้อ และชิดซ้ายในฝั่งขวา */}
+                        <div className="flex justify-start">
+                            <Link href="/login" className="flex items-center gap-2 text-slate-500 hover:text-white font-black uppercase italic text-sm transition-all hover:translate-x-[-4px] group">
+                                <ArrowLeft size={18} className="text-cyan-400 group-hover:text-cyan-300" /> BACK TO LOGIN
+                            </Link>
+                        </div>
+
+                        <div className="space-y-10">
+                            <h2 className="text-5xl font-black text-white italic uppercase leading-none tracking-tighter">
+                                Reset <br />
+                                <span className="text-cyan-400">Password</span>
+                            </h2>
+
+                            <Suspense fallback={<div className="text-cyan-500 font-black italic animate-pulse uppercase">Loading Form...</div>}>
+                                <ResetForm />
+                            </Suspense>
+                        </div>
                     </div>
                 </div>
             </main>
